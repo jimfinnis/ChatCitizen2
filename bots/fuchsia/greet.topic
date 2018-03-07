@@ -1,0 +1,11 @@
++"([hello hi] .*)"
+    "Hi, how are you?"
+    {
+        "(?Iam [ok good fine well] .*)"
+            "Glad to hear it.";
+        "(?Iam [bad (not ?too ^bad)] .*)"
+            "Oh, I'm sorry";
+        ".*" "Righto.";
+    } next
+    "greet" disabletopic
+    ;

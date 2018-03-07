@@ -1,0 +1,10 @@
+name: ChatCitizen
+main: org.pale.chatcitizen2.Plugin
+version: 2.0
+depend: [Citizens]
+commands:
+  chatcitizen:
+    description: ChatCitizen configuration command
+    aliases: [ccz]
+    usage: /chatcitizen
+    permission: chatcitizen

@@ -1,0 +1,14 @@
+#
+# catch-alls that run after everything.
+# 
++"$foo=.*"
+    [      
+    "I don't know how to respond to " $foo +,
+    "I don't know what to say!",
+    "What?",
+    "What on earth do you mean?",
+    "You're very strange.",
+    "Well, that's random.",
+    "Um.",
+    "It's a lovely day!"
+    ] choose;

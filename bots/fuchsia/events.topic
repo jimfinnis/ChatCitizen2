@@ -1,0 +1,22 @@
++"randsay"
+    ["Hello " ?@name + "." + ,
+    "Hello."] choose
+;
+
++"greetsay"
+    ["What are you doing here?",
+    "What's new in the castle?",
+    "Do you like books?"
+    ]
+;
+
++"PLEASESTOP"
+    ["Ow!,"Hey!","Ouch!","Stop that!","What was that for?"] choose;
+
++"rightclick"
+    "PLEASESTOP" recurse;
+;
+
++"entityhitme" "PLEASESTOP" recurse;
++"playerhitme" "PLEASESTOP" recurse;
+
