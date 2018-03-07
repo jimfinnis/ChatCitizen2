@@ -1,4 +1,4 @@
-= ChatCitizens2
+= ChatCitizen2
 Jim Finnis <jim.finnis@gmail.com>
 // settings
 :toc:
