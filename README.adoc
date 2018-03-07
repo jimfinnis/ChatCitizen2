@@ -1,0 +1,32 @@
+= ChatCitizens2
+Jim Finnis <jim.finnis@gmail.com>
+// settings
+:toc:
+:toc-placement!:
+
+This is a chatbot plugin for Bukkit Minecraft based on the 
+http://github.com/jimfinnis/SimpleChat/[SimpleChat] engine
+I'm working on. It will replace the original
+http://github.com/jimfinnis/ChatCitizens/[ChatCitizens] plugin,
+which used AIML.
+
+== Compiling
+Is a bit of a nightmare - or rather packaging is, because this
+plugin depends on the SimpleChat library, which itself is not
+a Bukkit plugin. To sort this, the maven POM actually imports
+all the classes from that library as resources, which is .. foul.
+You'll also need a fair few plugins installed.
+
+- Citizens 2
+- NPC Destinations
+- Sentinel
+
+Make sure the POM is up to date with the versions for these,
+and that the paths in there are right.
+
+== Usage
+I'll deal with this later, but it's mostly the same as ChatCitizens.
+The bot definition files are completely different, though: see
+http://github.com/jimfinnis/SimpleChat/[SimpleChat] for how they
+work.
+
