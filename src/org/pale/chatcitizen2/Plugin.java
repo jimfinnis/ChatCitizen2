@@ -28,6 +28,7 @@ import org.pale.chatcitizen2.plugininterfaces.NPCDestinations;
 import org.pale.chatcitizen2.plugininterfaces.Sentinel;
 import org.pale.simplechat.Bot;
 import org.pale.simplechat.BotConfigException;
+import org.pale.simplechat.Logger;
 
 
 
@@ -86,6 +87,13 @@ public class Plugin extends JavaPlugin {
 			getServer().getPluginManager().disablePlugin(this);	
 			return;
 		}
+		
+		org.pale.simplechat.Logger.setListener(new org.pale.simplechat.Logger.Listener() {
+			@Override
+			public void log(String s) {
+				Plugin.log("-- "+s);
+			}
+		});
 		
 		// check other optional plugins
 		ndPlugin = new NPCDestinations();

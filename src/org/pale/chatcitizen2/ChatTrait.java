@@ -23,6 +23,7 @@ import org.pale.simplechat.Bot;
 import org.pale.simplechat.BotConfigException;
 import org.pale.simplechat.BotInstance;
 import org.pale.simplechat.Conversation;
+import org.pale.simplechat.values.NoneValue;
 import org.pale.simplechat.values.StringValue;
 
 
@@ -82,7 +83,7 @@ public class ChatTrait extends Trait {
 	boolean SomeSetting = false;
 
 	// the actual chatbot
-	private BotInstance bot;
+	private BotInstance instance;
 	private long lastRandSay;
 
 
@@ -100,6 +101,8 @@ public class ChatTrait extends Trait {
 		}
 		return r;
 	}
+	
+	
 
 	SubBotData subBot = null;
 
@@ -123,15 +126,16 @@ public class ChatTrait extends Trait {
 		//Be sure to check event.getNPC() == this.getNPC() so you only handle clicks on this NPC!
 		if(event.getNPC() == this.getNPC()){
 			// this is where we trap a "give" action or suchlike
-			if(bot.bot.hasOpt("hasrightclick")){
+			if(instance.bot.hasFunc("RIGHTCLICK")){
 				Player p = event.getClicker();
 				ItemStack held = p.getInventory().getItemInMainHand();
 				// shouldn't be necessary, but it does seem odd that an empty hand is full of air...
 				String hstr = (held==null)?"air":held.getType().toString();
-				Conversation c = bot.getConversation(p);
+				Conversation c = instance.getConversation(p);
 				c.setVar("itemheld",new StringValue(hstr));
-				respondTo(p,"RIGHTCLICK");
-			}
+				respondToFunc("RIGHTCLICK", p);
+			} else
+				Plugin.log("does not have RC");
 		}
 	}
 
@@ -139,14 +143,14 @@ public class ChatTrait extends Trait {
 	public void monitorDamageFromEntity(final net.citizensnpcs.api.event.NPCDamageByEntityEvent e){
 		if(e.getNPC() == this.getNPC()){
 			Entity bastard = e.getDamager();
-			if(bot.bot.hasOpt("hasplayerhitme")){
+			if(instance.bot.hasFunc("PLAYERHITME")){
 				if(bastard instanceof Player){
 					Player p = (Player)bastard;
-					respondTo(p,"PLAYERHITME");
+					respondToFunc("PLAYERHITME", p);
 				}
 			} else {
-				if(bot.bot.hasOpt("hasentityhitme"))
-					sayToAll("ENTITYHITME");
+				if(instance.bot.hasFunc("ENTITYHITME"))
+					respondToFunc("ENTITYHITME",null);
 			}
 		}
 	}
@@ -154,7 +158,7 @@ public class ChatTrait extends Trait {
 	@EventHandler(priority=EventPriority.MONITOR)
 	public void monitorDamageEntity(final net.citizensnpcs.api.event.NPCDamageEntityEvent e){
 		if(e.getNPC() == this.getNPC()){
-			if(bot.bot.hasOpt("hashitsomething"))sayToAll("HITSOMETHING");
+			if(instance.bot.hasFunc("HITSOMETHING"))respondToFunc("HITSOMETHING",null);
 		}
 	}
 
@@ -186,18 +190,18 @@ public class ChatTrait extends Trait {
 
 	public void setBot(Bot b){
 		try {
-			bot = new BotInstance(b,this);
+			instance = new BotInstance(b,this);
 		} catch (BotConfigException e) {
 			Plugin.log("cannot configure bot "+b.getName());
 		}
-		bot.setVar("botname", new StringValue(b.getName()));
+		instance.setVar("botname", new StringValue(b.getName()));
 	}
 
 	// Run code when the NPC is despawned. This is called before the entity actually despawns so npc.getBukkitEntity() is still valid.
 	@Override
 	public void onDespawn() {
 		Plugin.log(" Despawn run on "+npc.getFullName());
-		bot=null;
+		instance=null;
 		plugin.removeChatter(npc);
 	}
 
@@ -223,10 +227,6 @@ public class ChatTrait extends Trait {
 	public void onRemove() {
 	}
 
-	private String handle(Player source,String input){
-		return bot.handle(input, source);
-	}
-
 	/**
 	 * Generate and send a response to a list of players. p (the player responded to) may be null.
 	 * 
@@ -234,11 +234,42 @@ public class ChatTrait extends Trait {
 	private void say(Player inResponseTo,String toName,String pattern){
 		List<Player> q = getNearPlayers(audibleDistance);
 		if(q.size()>0){
-			String msg = bot.handle(pattern, inResponseTo);
+			String msg = instance.handle(pattern, inResponseTo);
 			if(msg.trim().length()!=0){
 				String s = ChatColor.AQUA+"["+npc.getFullName()+" -> "+toName+"] "+ChatColor.WHITE+msg;
-				for(Player p: getNearPlayers(audibleDistance)){
+				for(Player p: q){
 					p.sendMessage(s);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Perform a user function in the bot and say the result. NOTE THAT the func will ALWAYS run whether
+	 * there's anyone to hear it or not.
+	 * @param string funcname
+	 * @param source player who caused the event which triggered this (sets convvars in bot) OR NONE, in which case it's a general message and from the bot.
+	 */
+	private void respondToFunc(String fname, Player source) {
+		String toName;
+		Plugin.log("attempting "+fname);
+
+		if(source!=null){
+			setPropertiesForSender(source);
+			toName = source.getDisplayName();
+		} else {
+			setPropertiesForNone();
+			toName = "(nearby)";
+		}
+		String msg = instance.runFunc(fname, source!=null?source:this); // if source is null, cast to this (any object will do, really).
+		if(msg!=null){
+			List<Player> q = getNearPlayers(audibleDistance);
+			if(q.size()>0){
+				if(msg.trim().length()!=0){
+					String s = ChatColor.AQUA+"["+npc.getFullName()+" -> "+toName+"] "+ChatColor.WHITE+msg;
+					for(Player p: q){
+						p.sendMessage(s);
+					}
 				}
 			}
 		}
@@ -269,12 +300,22 @@ public class ChatTrait extends Trait {
 	 */
 	public void setPropertiesForSender(Player player) {
 		// sets an instance var, not a conv var...
-		bot.setVar("name", new StringValue(player.getDisplayName()));
+		instance.setVar("name", new StringValue(player.getDisplayName()));
+	}
+	
+	/**
+	 * If a message is being sent to the general area with sayFuncToAll(),
+	 * set properties accordingly.
+	 */
+	public void setPropertiesForNone(){
+		// sets an instance var, not a conv var...
+		instance.setVar("name",NoneValue.instance);
+		
 	}
 
 	private long lastSayCheckIntervalTime=0;
 	private void processRandSay(){
-		if(bot.bot.hasOpt("hasrandsay")){
+		if(instance.bot.hasFunc("RANDSAY")){
 			long t = System.currentTimeMillis();
 			if(t-lastSayCheckIntervalTime > sayCheckInterval){
 				if((t-lastRandSay > sayInterval*1000) && (rand.nextDouble()<sayProbability)){
@@ -283,7 +324,7 @@ public class ChatTrait extends Trait {
 					if(ps.size() > 0){
 						// pick one at random.
 						Player p = ps.get(rand.nextInt(ps.size()));
-						respondTo(p,"RANDSAY");
+						respondToFunc("RANDSAY",p);
 						lastRandSay = t;
 					}
 				}
@@ -296,7 +337,7 @@ public class ChatTrait extends Trait {
 
 	List<Player> nearPlayersForGreet  = new ArrayList<Player>();
 	private void processGreetSay(){
-		if(bot.bot.hasOpt("hasgreet")){
+		if(instance.bot.hasFunc("GREETSAY")){
 			List<Player> nearPlayersNew = getNearPlayers(greetDist);
 			for(Player p : nearPlayersNew){
 				// is this someone who has just appeared?
@@ -310,7 +351,7 @@ public class ChatTrait extends Trait {
 					// we didn't greet them recently; let's do that.
 					if(t-lasttime > greetInterval*1000){
 						if(rand.nextDouble()<greetProbability){
-							respondTo(p,"GREETSAY");
+							respondToFunc("GREETSAY",p);
 						}
 						lastGreeted.put(p.getName(), t);
 					}
@@ -320,12 +361,14 @@ public class ChatTrait extends Trait {
 		}
 	}
 
+
+
 	/**
 	 * Used in the "t" test command
 	 * @param msg
 	 * @return
 	 */
 	public String getResponseTest(String msg) {
-		return bot.handle(msg,new Object());
+		return instance.handle(msg,new Object());
 	}
 }

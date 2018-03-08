@@ -8,8 +8,8 @@
     "Something else" otherwise;
 
 +test1 "wibble"
-    "test1" di
-    "test2" en
+    "test1" "main" disablepattern
+    "test2" "main" enablepattern
     :[1,2,3,4]; !f
     ""
     loop
@@ -19,8 +19,8 @@
     "Test 1 fires " swap +;
     
 +test2 "wibble"
-    "test1" en
-    "test2" di
+    "test1" "main" enablepattern
+    "test2" "main" disablepattern
     "Test 2 fires";
     
 :fac |n:|

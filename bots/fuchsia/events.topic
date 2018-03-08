@@ -1,22 +1,27 @@
-+"randsay"
-    ["Hello " ?@name + "." + ,
-    "Hello."] choose
+# not actually a topic as such, but holds special actions.
+
+:RANDSAY
+    hasnext if
+        none
+    else
+        ["Hello " ?@name + "." + ,
+        "Hello."] choose
+    then
 ;
 
-+"greetsay"
+:GREETSAY
     ["What are you doing here?",
     "What's new in the castle?",
     "Do you like books?"
-    ]
+    ] choose
 ;
 
-+"PLEASESTOP"
-    ["Ow!,"Hey!","Ouch!","Stop that!","What was that for?"] choose;
+:pleasestop
+    ["Ow!","Hey!","Ouch!","Stop that!","What was that for?"] choose;
 
-+"rightclick"
-    "PLEASESTOP" recurse;
-;
+:RIGHTCLICK  pleasestop;
 
-+"entityhitme" "PLEASESTOP" recurse;
-+"playerhitme" "PLEASESTOP" recurse;
+
+:ENTITYHITME pleasestop;
+:PLAYERHITME pleasestop;
 
