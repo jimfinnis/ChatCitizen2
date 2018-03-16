@@ -1,0 +1,30 @@
++"(call me $n=.*)"
+    $n !playername
+    [
+        "Of course.",
+        "Right you are.",
+        "Very well.",
+        "Absolutely."
+    ] choose;
+    
++"(my name is $n=.*)" "call me ${$n}" recurse;
++"(please call me $n=.*)" "call me ${$n}" recurse;
++"(refer to me as $n=.*)" "call me ${$n}" recurse;
+
++"(I am .* [~female (not . man)])"  
+    ?playergender `female = if
+        [
+        "I'm aware of that",
+        "I'm quite aware of that",
+        "I know",
+        "Indeed"
+        ] choose
+        [".", "," honor+] choose + .
+    else
+        `female !playergender
+        "I'm terribly sorry,". honor.
+    then
+    out clean;
+
+
+    

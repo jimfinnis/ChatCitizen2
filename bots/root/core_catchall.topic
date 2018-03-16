@@ -1,0 +1,6 @@
++"$foo=.*"
+    [      
+    "I don't know how to respond to that.",
+    "What?",
+    "What do you mean?"
+    ] choose;

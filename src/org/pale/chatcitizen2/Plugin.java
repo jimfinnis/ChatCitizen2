@@ -1,9 +1,7 @@
 package org.pale.chatcitizen2;
 
 import java.lang.reflect.Field;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,11 +22,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.pale.chatcitizen2.Command.CallInfo;
 import org.pale.chatcitizen2.Command.Cmd;
 import org.pale.chatcitizen2.Command.Registry;
+import org.pale.chatcitizen2.extensions.Core;
+import org.pale.chatcitizen2.extensions.NPCDest;
 import org.pale.chatcitizen2.plugininterfaces.NPCDestinations;
 import org.pale.chatcitizen2.plugininterfaces.Sentinel;
 import org.pale.simplechat.Bot;
 import org.pale.simplechat.BotConfigException;
-import org.pale.simplechat.Logger;
+import org.pale.simplechat.actions.InstructionCompiler;
 
 
 
@@ -51,7 +51,7 @@ public class Plugin extends JavaPlugin {
 
 	public NPCDestinations ndPlugin;
 	public Sentinel sentinelPlugin;
-	
+
 	private Registry commandRegistry=new Registry();
 
 	/**
@@ -75,6 +75,9 @@ public class Plugin extends JavaPlugin {
 		super();
 		if(instance!=null)
 			throw new RuntimeException("oi! only one instance!");
+		InstructionCompiler.register(Core.class);
+		InstructionCompiler.register(NPCDest.class);
+		InstructionCompiler.register(org.pale.chatcitizen2.extensions.Sentinel.class);
 	}
 
 	@Override
@@ -87,21 +90,21 @@ public class Plugin extends JavaPlugin {
 			getServer().getPluginManager().disablePlugin(this);	
 			return;
 		}
-		
+
 		org.pale.simplechat.Logger.setListener(new org.pale.simplechat.Logger.Listener() {
 			@Override
 			public void log(String s) {
 				Plugin.log("-- "+s);
 			}
 		});
-		
+
 		// check other optional plugins
 		ndPlugin = new NPCDestinations();
-		
+
 		sentinelPlugin = new Sentinel();
 
 		// initialise AIML extensions
-//		AIMLProcessor.extension = new ChatBotAIMLExtension();
+		//		AIMLProcessor.extension = new ChatBotAIMLExtension();
 
 		// this is the listener for pretty much ALL events EXCEPT NPC events, not just chat.
 		new ChatEventListener(this);
@@ -119,15 +122,30 @@ public class Plugin extends JavaPlugin {
 
 	public void loadBots(){
 		FileConfiguration c = this.getConfig();
-		ConfigurationSection bots = c.getConfigurationSection("bots");
+		final ConfigurationSection bots = c.getConfigurationSection("bots");
 		if(bots==null){
 			throw new RuntimeException("No bots section in config");
 		}
+
+		// tell the system to get the bot's filename from the config file
+		Bot.PathProvider pf = new Bot.PathProvider() {
+			@Override
+			public Path path(String name) {
+				String n = bots.getString(name);
+				if(n==null) {
+					log("Provider: req "+name+", result : THAT BOT DOES NOT EXIST. Add it to config.yml");
+					return null;
+				} else {
+					log("Provider: req "+name+", result "+n);
+					return Paths.get(bots.getString(name));
+				}
+			}
+		};
+		Bot.setPathProvider(pf);
+
 		for(String name : bots.getKeys(false)){
-			String confpath = bots.getString(name);
-			log("Loading bot "+name+" from path "+confpath);
 			try {
-				this.bots.put(name,new Bot(Paths.get(confpath)));
+				this.bots.put(name,Bot.loadBot(name));
 			} catch (BotConfigException e) {
 				log("cannot load bot "+name+", error: "+e.getMessage());
 			}
@@ -220,15 +238,19 @@ public class Plugin extends JavaPlugin {
 		}
 		c.msg(b.toString());
 	}
-	
+
 	@Cmd(desc="reload all bots",argc=0,permission="chatcitizen.reloadall")
 	public void reloadall(CallInfo c){
 		for(Bot b : bots.values()){
-			// b.reload();
+			try {
+				b.reload();
+			} catch (BotConfigException e) {
+				c.msg("Bot reload failed: "+e.getMessage());
+			}
 		}	
-		c.msg("Reload not supported!");
+		c.msg("Reload OK.");
 	}
-	
+
 	@Cmd(desc="reload a given bot",argc=1,permission="chatcitizen.reload",usage="[botname]")
 	public void reload(CallInfo c){
 		String n = c.getArgs()[0];
@@ -236,25 +258,29 @@ public class Plugin extends JavaPlugin {
 			c.msg("Bot not known. List bots with \"ccz bots\".");
 		} else {
 			Bot b = bots.get(n);
-//			b.reload();
+			try {
+				b.reload();
+			} catch (BotConfigException e) {
+				c.msg("Bot reload failed: "+e.getMessage());
+			}
 		}
-		c.msg("Reload not supported!");
+		c.msg("Reload OK.");
 	}
-	
+
 	@Cmd(name="bots",desc="list all bots and which NPCs use them",argc=0)
 	public void listBots(CallInfo c){
 		for(String s : bots.keySet()){
 			Bot b = bots.get(s);
 			StringBuilder sb = new StringBuilder();
 			sb.append(ChatColor.AQUA+s+": "+ChatColor.GREEN);
-//			for(BotInstance i: b.getChats()){
-//				sb.append(chat.npc.getFullName()+" ");
-//			}
+			//			for(BotInstance i: b.getChats()){
+			//				sb.append(chat.npc.getFullName()+" ");
+			//			}
 			sb.append("LIST NOT SUPPORTED");
 			c.msg(sb.toString());
 		}
 	}
-	
+
 	@Cmd(name="t",desc="chat test",permission="chatcitizen.test",usage="[string]",cz=true)
 	public void testBot(CallInfo c){
 		ChatTrait ct = c.getCitizen();
@@ -311,20 +337,20 @@ public class Plugin extends JavaPlugin {
 			return;
 		}
 	}
-	
+
 	@Cmd(desc="set a chatbot for an NPC",argc=1,usage="<botname>",cz=true,permission="chatcitizen.set")
 	public void setbot(CallInfo c){
 		String name = c.getArgs()[0];
 		ChatTrait ct = c.getCitizen();
 		Bot b = Plugin.getInstance().getBot(name);
 		if(b==null){
-			 c.msg("\""+name+"\" is not installed on this server.");
+			c.msg("\""+name+"\" is not installed on this server.");
 		} else {
 			ct.setBot(b);
 			c.msg(ct.getNPC().getFullName()+" is now using bot \""+name+"\".");
 		}
 	}
-	
+
 	@Cmd(desc="set a \"sub-bot\" for an NPC",argc=1,usage="<subbot>",cz=true,permission="chatcitizen.set")
 	public void subbot(CallInfo c){
 		String name = c.getArgs()[0];

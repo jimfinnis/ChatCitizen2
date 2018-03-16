@@ -32,7 +32,7 @@ public class NPCDestinations extends ExternalPluginInterface{
 			return locNum;
 		}
 		
-		private String go(int locnum,long forTime){
+		private boolean go(int locnum,long forTime){
 			if(locnum < trait.NPCLocations.size()){
 				npc.getNavigator().cancelNavigation();
 				trait.clearPendingDestinations();
@@ -42,10 +42,10 @@ public class NPCDestinations extends ExternalPluginInterface{
 				trait.locationLockUntil = new java.util.Date(System.currentTimeMillis()+forTime);
 				trait.lastPositionChange = new java.util.Date();
 				trait.setRequestedAction(en_RequestedAction.SET_LOCATION);
-				return "YES";
+				return true;
 			} else {
 				Plugin.warn("Location "+locnum+" out of range ["+npc.getFullName()+"]");
-				return "NO";
+				return false;
 			}
 		}
 		
@@ -54,13 +54,13 @@ public class NPCDestinations extends ExternalPluginInterface{
 		 * @param name
 		 * @param forTime how long to hold the location for.
 		 */
-		public String go(String name,long forTime){
+		public boolean go(String name,long forTime){
 			int locNum = getLoc(name);
 			if(locNum>=0){
 				return go(locNum,forTime);
 			} else {
 				Plugin.warn("Cannot find location to go to: "+name+" ["+npc.getFullName()+"]");
-				return "NO";
+				return false;
 			}
 		}
 	}

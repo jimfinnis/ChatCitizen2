@@ -1,0 +1,6 @@
+# Reductions - after the AIML usage - are patterns which, when matched,
+# turn their data into a canonical form which is then matched for in
+# user patterns.
+
++"(what .* name)" "NAME" recurse;
++"(.* you .* called)" "NAME" recurse;

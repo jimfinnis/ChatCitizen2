@@ -1,0 +1,40 @@
+:RANDSAY
+    hasnext if
+        none
+    else
+        ["Hello " ?@name + "." + ,
+        "Hello."] choose
+    then
+;
+
+
+:GREETSAY
+    "todstring" mctime !t
+    ?t ["morning","afternoon","evening"] in if
+        ["Good", ?t, honor] " " join. "! ".
+    else
+        3 rand if
+            "Good evening,".
+        else
+            "Hello,".
+        then
+        honor. ".".
+        4 rand not if
+            ["Shouldn't you be in bed?",
+            "The darkness weighs heavy.",
+            "It's a cold night.",
+            "It's dark out there."
+            ] choose.
+        then
+    then
+    out clean    
+;
+
+:pleasestop
+    ["Ow!","Hey!","Ouch!","Stop that!","What was that for?"] choose;
+
+:RIGHTCLICK "todstring" mctime;
+
+
+:ENTITYHITME pleasestop;
+:PLAYERHITME pleasestop;

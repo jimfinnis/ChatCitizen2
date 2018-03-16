@@ -83,7 +83,7 @@ public class ChatTrait extends Trait {
 	boolean SomeSetting = false;
 
 	// the actual chatbot
-	private BotInstance instance;
+	private BotInstance instance = null;
 	private long lastRandSay;
 
 
@@ -103,8 +103,6 @@ public class ChatTrait extends Trait {
 	}
 	
 	
-
-	SubBotData subBot = null;
 
 	// 
 	// Here you should load up any values you have previously saved (optional). 
@@ -190,6 +188,7 @@ public class ChatTrait extends Trait {
 
 	public void setBot(Bot b){
 		try {
+			if(instance!=null)instance.remove();
 			instance = new BotInstance(b,this);
 		} catch (BotConfigException e) {
 			Plugin.log("cannot configure bot "+b.getName());
@@ -201,8 +200,10 @@ public class ChatTrait extends Trait {
 	@Override
 	public void onDespawn() {
 		Plugin.log(" Despawn run on "+npc.getFullName());
+		instance.remove();
 		instance=null;
 		plugin.removeChatter(npc);
+		
 	}
 
 	//Run code when the NPC is spawned. Note that npc.getBukkitEntity() will be null until this method is called.
