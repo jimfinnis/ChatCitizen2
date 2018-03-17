@@ -30,3 +30,6 @@ The bot definition files are completely different, though: see
 http://github.com/jimfinnis/SimpleChat/[SimpleChat] for how they
 work.
 
+== Special functions.
+There are a few. For now, you can work them out from the `extensions` package.
+
