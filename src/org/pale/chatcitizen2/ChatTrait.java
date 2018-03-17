@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 
 import net.citizensnpcs.api.persistence.Persist;
@@ -23,6 +24,8 @@ import org.pale.simplechat.Bot;
 import org.pale.simplechat.BotConfigException;
 import org.pale.simplechat.BotInstance;
 import org.pale.simplechat.Conversation;
+import org.pale.simplechat.Logger;
+import org.pale.simplechat.actions.Function;
 import org.pale.simplechat.values.NoneValue;
 import org.pale.simplechat.values.StringValue;
 
@@ -164,14 +167,51 @@ public class ChatTrait extends Trait {
 
 	private int tickint=0;
 	public long timeSpawned=0;
+	
+	public class Timer {
+		private String fname;
+		private long interval;
+		private long ct;
+		public Timer(String f,long interval){
+			this.fname = f;
+			this.interval = interval;
+			ct=interval;
+		}
+		
+		private void tick(){
+			if(--ct <=0){
+				ct = interval;
+				respondToFunc(fname, null);
+			}
+		}
+	}
+	private Map<Integer,Timer> timers = new HashMap<Integer,Timer>();
+	static int timerIdCt=0;
+	public int addTimer(String fname,int interval){
+		timers.put(timerIdCt,new Timer(fname,interval));
+		return timerIdCt++;
+	}
+	private List<Integer> timersToRemove = new ArrayList<Integer>();
+	public void removeTimer(int t){
+		if(timers.containsKey(t))
+			timersToRemove.add(t);
+		else
+			Plugin.log("Cannot remove timer "+t+" on "+npc.getFullName());
+	}
 
 	// Called every tick
 	@Override
 	public void run() {
-		if(tickint++==20){ // to reduce CPU usage
+		if(tickint++==20){ // to reduce CPU usage - this is about 1Hz.
 			processRandSay();
 			processGreetSay();
 			tickint=0;
+			for(Entry<Integer, Timer> t: timers.entrySet())
+				t.getValue().tick();
+			for(int t: timersToRemove){
+				timers.remove(t);
+			}
+			timersToRemove.clear();
 		}
 		timeSpawned++;
 	}
@@ -189,11 +229,10 @@ public class ChatTrait extends Trait {
 	public void setBot(Bot b){
 		try {
 			if(instance!=null)instance.remove();
-			instance = new BotInstance(b,this);
+			instance = new BotInstance(b,npc.getFullName(),this);
 		} catch (BotConfigException e) {
 			Plugin.log("cannot configure bot "+b.getName());
 		}
-		instance.setVar("botname", new StringValue(b.getName()));
 	}
 
 	// Run code when the NPC is despawned. This is called before the entity actually despawns so npc.getBukkitEntity() is still valid.

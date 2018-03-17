@@ -10,6 +10,3 @@
     ;
     
 
-+"(debug on)" 1 debug "Debugging on.";
-+"(debug off)" 0 debug "Debugging off.";
-

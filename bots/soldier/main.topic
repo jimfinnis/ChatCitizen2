@@ -26,5 +26,130 @@
     then
     out clean;
 
-
++"(shut up)"
+    1!nogreet
+    ["Shutting up","Of course","Right you are","Yes"] choose
+    2 rand if ", " + honor + then
+    clean
+;   
     
++"(?please be quiet .*)" "shut up" recurse;
++"silence .*" "shut up" recurse;
++"(shut it .*)" "shut up" recurse;
+
+:talkon
+    none!nogreet
+    "Yes," honor +
+    clean
+;   
+
++"( ?(you [can may]) [talk speak] .*)" talkon;
+
+
+:report
+    GREETSAY.
+    sentinel_timeSinceAttack !t
+    cases
+        ?t 1000 < if
+            ["There's been trouble recently.",
+                "Things have been hot!",
+                "Lots of monsters around.",
+                "It's been intense."
+            ] choose case
+        ?t 1000 >= ?t 5000 < and if
+            [
+                "We were under attack recently.",
+                "Been a short while since an attack.",
+                "There were monsters a little while ago.",
+                "Things were hairy a while back."
+            ] choose case
+            [
+                "It's been quiet.", "It's been very quiet.",
+                "Things have been quiet.","All's well.","Everything peaceful.",
+                "Nice and quiet."
+            ] choose otherwise.
+
+    sentinel_timeSinceSpawn !t
+    cases
+        ?t 25000 < if
+            ["I've not been here long.",
+                "I'm fairly new here.",
+                "Not been around long."] choose case
+        ?t 25000 >= ?t 1000000 < and if
+            ["I'm getting the hang of things.",
+                "I'm beginning to settle in now.",
+                "Getting the feel of things now."] choose case
+            ["It's a nice place, this.",
+                "Really feel I belong here.",
+                "It's a good place.",
+                "Nice place you have here."] choose otherwise.
+    
+    sentinel_guarding !t
+    cases
+        ?t `nothing = if "" case
+        ?t `something = if
+            "I'm guarding something or other at the moment." case
+        "I'm guarding " ?t + "." + otherwise.
+    
+    out clean
+;    
+
++"(?(give ?me ?a) report .*)" report;
++"(how .+)" report;
++"(what .* status)" report;
++"hello" report;
+
+
+
+:guardme
+    none sentinel_guard if
+        "Yes ". honor. "!".
+    else
+        "I'm sorry, I can't do that"
+    then
+    out clean
+;
+
+:guardother |n:|
+    ?n sentinel_guard if
+        "Yes ". honor. "!".
+    else
+        "I'm sorry, I don't know who ${$n} is!"
+    then
+    out clean
+;
+
+:guardoff
+    sentinel_guardoff
+    ["yes","of course","right away"] choose " " +.
+    honor. "!". out clean
+;
+
+
++"([guard help defend (come with)] me)" guardme;
++"([guard help defend (come with)] $n=.+)" $n guardother;
+
++"(stop guarding)" guardoff;
++"(?please go away .*)" guardoff;
++"(?please return .*)" guardoff;
++"(?please .+ off)" guardoff;
+
+
++"(are you ready .*)" "I'm always ready.";
++"(why .* you here)" "I'm on guard.";
++"(why .* I here)" "That's an interesting question.";
++"(.+ joke)" "I'm not here to joke";
++"(what .* [doing guarding] .*)"
+    sentinel_guarding !t
+    cases
+        ?t `nothing = if "I'm guarding the area against monsters." case
+        ?t `something = if
+            "It's a secret." case
+        "I'm guarding " ?t + "." + otherwise.
+    out clean
+    {
+        "(.* ~good .*)" "The pay's rubbish, but I enjoy it.";
+    } next
+;   
+
+

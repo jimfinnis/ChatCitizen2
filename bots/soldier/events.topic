@@ -1,39 +1,46 @@
 :RANDSAY
-    hasnext if
+    hasnext ?nogreet or if
         none
     else
         ["Hello " ?@name + "." + ,
-        "Hello."] choose
+        "Hello."] choose clean
     then
 ;
 
 
 :GREETSAY
-    "todstring" mctime !t
-    ?t ["morning","afternoon","evening"] in if
-        ["Good", ?t, honor] " " join. "! ".
+    ?nogreet if
+        none
     else
-        3 rand if
-            "Good evening,".
+        "todstring" mctime !t
+        ?t ["morning","afternoon","evening"] in if
+            ["Good", ?t, honor] " " join. "!".
         else
-            "Hello,".
+            # it's nighttime.
+        
+            3 rand if
+                "Good evening,".
+            else
+                "Hello,".
+            then
+            honor. ".".
+            4 rand not if
+                ["Shouldn't you be in bed?",
+                "The darkness weighs heavy.",
+                "It's a cold night.",
+                "It's dark out there."
+                ] choose.
+            then
         then
-        honor. ".".
-        4 rand not if
-            ["Shouldn't you be in bed?",
-            "The darkness weighs heavy.",
-            "It's a cold night.",
-            "It's dark out there."
-            ] choose.
-        then
+        out clean clearout
     then
-    out clean    
 ;
+
 
 :pleasestop
     ["Ow!","Hey!","Ouch!","Stop that!","What was that for?"] choose;
 
-:RIGHTCLICK "todstring" mctime;
+:RIGHTCLICK pleasestop;
 
 
 :ENTITYHITME pleasestop;
