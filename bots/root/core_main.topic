@@ -1,6 +1,3 @@
-~female = [woman girl lady]
-
-
 
 +"NAME"
     ["my name is","people call me"] choose.

@@ -9,7 +9,7 @@
 
 
 :GREETSAY
-    ?nogreet if
+    ?nogreet hasnext or if
         none
     else
         "todstring" mctime !t

@@ -1,31 +1,79 @@
 +"(call me $n=.*)"
-    $n !playername
-    [
-        "Of course.",
-        "Right you are.",
-        "Very well.",
-        "Absolutely."
-    ] choose;
+    $n !playername ^ok clean;
     
 +"(my name is $n=.*)" "call me ${$n}" recurse;
 +"(please call me $n=.*)" "call me ${$n}" recurse;
 +"(refer to me as $n=.*)" "call me ${$n}" recurse;
 
-+"(I am .* [~female (not . man)])"  
-    ?playergender `female = if
-        [
-        "I'm aware of that",
-        "I'm quite aware of that",
-        "I know",
-        "Indeed"
-        ] choose
-        [".", "," honor+] choose + .
-    else
-        `female !playergender
-        "I'm terribly sorry,". honor.
-    then
+:checkgender
+    "may I still address ".
+    "you as ". honor. "?". out clean
+    {
+        "~yes" "Thank you".;
+        "~no" "Then what may I call you?"
+            {
+                "$n=.*" "call me ${$n}" recurse;
+            } next;
+    } next;
+
+:setgender |gen:p|
+     {
+         "(.+ ~not ~gender .*)" 
+            "That's fine ". `none !playergender;
+         "(.+ $c=~gender .*)"
+            $c !playergender
+            ^ok. ". ". checkgender;
+         "(.+ ~not ~say)"
+            `none !playergender
+            ^ok. ",". checkgender;
+         "(I am ?[a an] $c=.+)"
+            $c !playergender 
+            ^ok. ". It's a new one to me - ". checkgender;
+         "(.* ~bad .*)"
+            "Oh dear, I'm very sorry. I'll still address you as ".
+            honor.;
+     } !p
+
+    cases
+        ?playergender ?gen = if
+            [
+            "I'm aware of that",
+            "I'm quite aware of that",
+            "I know",
+            "Indeed"
+            ] choose
+            [".", "," honor+] choose + .
+        case
+        ?playergender isnone if
+            ?gen !playergender
+            ?gen `male = if
+                # setting to male, which is (sort of) the default
+                ^ok. ",". honor.
+            else
+                "I'm terribly sorry,". honor.
+            then
+        case
+            "All genders are welcome here, just tell me yours".
+            ?p next
+        otherwise
     out clean;
 
++"(.* [nor neither] am I ?a ~female .*)"
+    `male setgender;
++"(I am .* ~not .* ~female .*)"
+
+    `male setgender;
++"(I am .* ~female .*)"
+    `female setgender;
+
++"(.* [nor neither] am I ?a ~male .*)"
+    `female setgender;
++"(I am .* ~not .* ~male .*)"
+    `female setgender;
++"(I am .* ~male .*)"
+    `male setgender;
+
+    
 +"(shut up)"
     1!nogreet
     ["Shutting up","Of course","Right you are","Yes"] choose
