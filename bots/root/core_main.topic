@@ -1,9 +1,9 @@
-
-+"NAME"
++NAME
     ["my name is","people call me"] choose.
     " ".
     ?@botname. 
     out sentence
     ;
     
-
++(what .* name) "NAME" recurse;
++(.* you .* called) "NAME" recurse;

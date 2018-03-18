@@ -1,35 +1,35 @@
-+"(call me $n=.*)"
++(call me $n=.*)
     $n !playername ^ok clean;
     
-+"(my name is $n=.*)" "call me ${$n}" recurse;
-+"(please call me $n=.*)" "call me ${$n}" recurse;
-+"(refer to me as $n=.*)" "call me ${$n}" recurse;
++(my name is $n=.*) "call me ${$n}" recurse;
++(please call me $n=.*) "call me ${$n}" recurse;
++(refer to me as $n=.*) "call me ${$n}" recurse;
 
 :checkgender
     "may I still address ".
     "you as ". honor. "?". out clean
     {
-        "~yes" "Thank you".;
-        "~no" "Then what may I call you?"
+        +~yes "Thank you".;
+        +~no "Then what may I call you?"
             {
-                "$n=.*" "call me ${$n}" recurse;
+                +$n=.* "call me ${$n}" recurse;
             } next;
     } next;
 
 :setgender |gen:p|
      {
-         "(.+ ~not ~gender .*)" 
+         +(.+ ~not ~gender .*)
             "That's fine ". `none !playergender;
-         "(.+ $c=~gender .*)"
+         +(.+ $c=~gender .*)
             $c !playergender
             ^ok. ". ". checkgender;
-         "(.+ ~not ~say)"
+         +(.+ ~not ~say)
             `none !playergender
             ^ok. ",". checkgender;
-         "(I am ?[a an] $c=.+)"
+         +(I am ?[a an] $c=.+)
             $c !playergender 
             ^ok. ". It's a new one to me - ". checkgender;
-         "(.* ~bad .*)"
+         +(.* ~bad .*)
             "Oh dear, I'm very sorry. I'll still address you as ".
             honor.;
      } !p
@@ -58,32 +58,32 @@
         otherwise
     out clean;
 
-+"(.* [nor neither] am I ?a ~female .*)"
++(.* [nor neither] am I ?a ~female .*)
     `male setgender;
-+"(I am .* ~not .* ~female .*)"
++(I am .* ~not .* ~female .*)
 
     `male setgender;
-+"(I am .* ~female .*)"
++(I am .* ~female .*)
     `female setgender;
 
-+"(.* [nor neither] am I ?a ~male .*)"
++(.* [nor neither] am I ?a ~male .*)
     `female setgender;
-+"(I am .* ~not .* ~male .*)"
++/qqqq (I am .* ~not .* ~male .*)
     `female setgender;
-+"(I am .* ~male .*)"
++(I am .* ~male .*)
     `male setgender;
 
     
-+"(shut up)"
++(shut up)
     1!nogreet
     ["Shutting up","Of course","Right you are","Yes"] choose
     2 rand if ", " + honor + then
     clean
 ;   
     
-+"(?please be quiet .*)" "shut up" recurse;
-+"silence .*" "shut up" recurse;
-+"(shut it .*)" "shut up" recurse;
++(?please be quiet .*) "shut up" recurse;
++(silence .*) "shut up" recurse;
++(shut it .*) "shut up" recurse;
 
 :talkon
     none!nogreet
@@ -91,7 +91,7 @@
     clean
 ;   
 
-+"( ?(you [can may]) [talk speak] .*)" talkon;
++( ?(you [can may]) [talk speak] .*) talkon;
 
 
 :report
@@ -142,10 +142,10 @@
     out clean
 ;    
 
-+"(?(give ?me ?a) report .*)" report;
-+"(how .+)" report;
-+"(what .* status)" report;
-+"hello" report;
++(?(give ?me ?a) report .*) report;
++(how .+) report;
++(what .* status) report;
++hello report;
 
 
 
@@ -174,20 +174,20 @@
 ;
 
 
-+"([guard help defend (come with)] me)" guardme;
-+"([guard help defend (come with)] $n=.+)" $n guardother;
++([guard help defend (come with)] me) guardme;
++([guard help defend (come with)] $n=.+) $n guardother;
 
-+"(stop guarding)" guardoff;
-+"(?please go away .*)" guardoff;
-+"(?please return .*)" guardoff;
-+"(?please .+ off)" guardoff;
++(stop guarding) guardoff;
++(?please go away .*) guardoff;
++(?please return .*) guardoff;
++(?please .+ off) guardoff;
 
 
-+"(are you ready .*)" "I'm always ready.";
-+"(why .* you here)" "I'm on guard.";
-+"(why .* I here)" "That's an interesting question.";
-+"(.+ joke)" "I'm not here to joke";
-+"(what .* [doing guarding] .*)"
++(are you ready .*) "I'm always ready.";
++(why .* you here) "I'm on guard.";
++(why .* I here) "That's an interesting question.";
++(.+ joke) "I'm not here to joke";
++(what .* [doing guarding] .*)
     sentinel_guarding !t
     cases
         ?t `nothing = if "I'm guarding the area against monsters." case
@@ -196,7 +196,7 @@
         "I'm guarding " ?t + "." + otherwise.
     out clean
     {
-        "(.* ~good .*)" "The pay's rubbish, but I enjoy it.";
+        +(.* ~good .*) "The pay's rubbish, but I enjoy it.";
     } next
 ;   
 

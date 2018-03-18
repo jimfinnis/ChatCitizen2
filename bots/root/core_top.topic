@@ -1,6 +1,6 @@
 # important but standard things all bots should match first.
 
 
-+"(debug on)" 1 debug "Debugging on.";
-+"(debug off)" 0 debug "Debugging off.";
++(debug on) 1 debug "Debugging on.";
++(debug off) 0 debug "Debugging off.";
 

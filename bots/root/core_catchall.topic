@@ -1,4 +1,4 @@
-+"$foo=.*"
++$foo=.*
     [      
     "I don't know how to respond to that.",
     "What?",
