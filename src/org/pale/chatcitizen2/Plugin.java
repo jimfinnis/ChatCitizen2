@@ -78,6 +78,7 @@ public class Plugin extends JavaPlugin {
 		InstructionCompiler.register(Core.class);
 		InstructionCompiler.register(NPCDest.class);
 		InstructionCompiler.register(org.pale.chatcitizen2.extensions.Sentinel.class);
+		InstructionCompiler.addExtension("ChatCitizen");
 	}
 
 	@Override

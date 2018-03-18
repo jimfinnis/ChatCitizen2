@@ -1,7 +1,15 @@
 # configuration data
 bots:
-    default: "plugins/ChatCitizen/bots/alice2"
-    currentevents: "plugins/ChatCitizen/bots/currentevents"
-    jokebot: "plugins/ChatCitizen/bots/jokebot"
-    wndef: "plugins/ChatCitizen/bots/wndef"
+#    fuchsia: "plugins/ChatCitizen/bots/fuchsia"
+#    default: "plugins/ChatCitizen/bots/default"
+#    soldier: "plugins/ChatCitizen/bots/soldier"
+#    poet: "plugins/ChatCitizen/bots/poet"
+#    shop: "plugins/ChatCitizen/bots/shop"
+#    pub: "plugins/ChatCitizen/bots/pub"
+
+    root: "plugins/ChatCitizen/bots/root"
+    pub: "plugins/ChatCitizen/bots/root"
+    poet: "plugins/ChatCitizen/bots/root"
+    shop: "plugins/ChatCitizen/bots/root"
+    fuchsia: "plugins/ChatCitizen/bots/root"
     soldier: "plugins/ChatCitizen/bots/soldier"

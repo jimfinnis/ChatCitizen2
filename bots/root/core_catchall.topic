@@ -1,4 +1,5 @@
 +$foo=.*
+    holdnext # so we don't lose the thread of a conversation!
     [      
     "I don't know how to respond to that.",
     "What?",
