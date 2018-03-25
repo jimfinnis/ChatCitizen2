@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 import net.citizensnpcs.api.persistence.Persist;
+import net.citizensnpcs.api.persistence.PersistenceLoader;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
 import net.citizensnpcs.api.util.DataKey;
@@ -76,20 +77,10 @@ public class ChatTrait extends Trait {
 
 	@Persist public double audibleDistance=10; //!< how far this robot is audible
 
-	// name of the "sub-bot" data, which contains different maps and sets shared by the bot to provide
-	// variation within a bot.
-
-	@Persist public String subbotName="default";
-
-
-	// example setting.
-	boolean SomeSetting = false;
-
 	// the actual chatbot
-	private BotInstance instance = null;
+	BotInstance instance = null;
 	private long lastRandSay;
-
-
+	
 	public String getBotName(){
 		return botName;
 	}
@@ -113,12 +104,12 @@ public class ChatTrait extends Trait {
 	// This is called AFTER onAttach so you can load defaults in onAttach and they will be overridden here.
 	// This is called BEFORE onSpawn, npc.getBukkitEntity() will return null.
 	public void load(DataKey key) {
-		SomeSetting = key.getBoolean("SomeSetting", false);
+//		SomeSetting = key.getBoolean("SomeSetting", false);
 	}
 
 	// Save settings for this NPC (optional). These values will be persisted to the Citizens saves file
 	public void save(DataKey key) {
-		key.setBoolean("SomeSetting",SomeSetting);
+//		key.setBoolean("SomeSetting",SomeSetting);
 	}
 
 	@EventHandler
@@ -250,7 +241,6 @@ public class ChatTrait extends Trait {
 	@Override
 	public void onSpawn() {
 		if(botName==null)botName="default"; // this really shouldn't be required.
-		if(subbotName==null)subbotName = "default";
 
 		Bot b = plugin.getBot(botName);
 		if(b==null)

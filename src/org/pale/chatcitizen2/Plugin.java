@@ -1,12 +1,18 @@
 package org.pale.chatcitizen2;
 
+import java.io.IOException;
+import java.io.StreamTokenizer;
+import java.io.StringReader;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
@@ -28,7 +34,15 @@ import org.pale.chatcitizen2.plugininterfaces.NPCDestinations;
 import org.pale.chatcitizen2.plugininterfaces.Sentinel;
 import org.pale.simplechat.Bot;
 import org.pale.simplechat.BotConfigException;
+import org.pale.simplechat.Conversation;
+import org.pale.simplechat.ParserError;
+import org.pale.simplechat.actions.ActionException;
 import org.pale.simplechat.actions.InstructionCompiler;
+import org.pale.simplechat.actions.InstructionStream;
+import org.pale.simplechat.actions.Value;
+import org.pale.simplechat.values.DoubleValue;
+import org.pale.simplechat.values.IntValue;
+import org.pale.simplechat.values.StringValue;
 
 
 
@@ -223,7 +237,6 @@ public class Plugin extends JavaPlugin {
 		ChatTrait ct = c.getCitizen();
 		a = new String[] {
 				"Bot name = "+ct.getBotName(),
-				"Sub-bot name = "+ct.subbotName,
 				"Random speech distance [saydist] = "+ct.sayDist,
 				"Random speech interval [sayint] = "+ct.sayInterval,
 				"Random speech chance [sayprob] = "+(int)(ct.sayProbability*100),
@@ -352,14 +365,6 @@ public class Plugin extends JavaPlugin {
 		}
 	}
 
-	@Cmd(desc="set a \"sub-bot\" for an NPC",argc=1,usage="<subbot>",cz=true,permission="chatcitizen.set")
-	public void subbot(CallInfo c){
-		String name = c.getArgs()[0];
-		ChatTrait ct = c.getCitizen();
-		ct.subbotName = name;
-		c.msg(ct.getNPC().getFullName()+" is now using sub-bot \""+name+"\".");
-	}
-
 	@Cmd(desc="show help for a command or list commands",argc=-1,usage="[<command name>]")
 	public void help(CallInfo c){
 		if(c.getArgs().length==0){
@@ -367,5 +372,52 @@ public class Plugin extends JavaPlugin {
 		} else {
 			commandRegistry.showHelp(c,c.getArgs()[0]);
 		}
+	}
+	
+	@Cmd(desc="list all instance variables for the current NPC",cz=true)
+	public void liv(CallInfo c){
+		ChatTrait ct = c.getCitizen();
+		Map<String,Value> vars = ct.instance.getVars();
+		for(Entry<String, Value>e: vars.entrySet()){
+			c.msg(ChatColor.AQUA+e.getKey()+": "+ChatColor.YELLOW+e.getValue().str());
+		}
+	}
+	@Cmd(desc="set an instance variable",usage="<name> <type (i,d,s,v)> <value>",cz=true,permission="chatcitizen.set")
+	public void siv(CallInfo c){
+		ChatTrait ct = c.getCitizen();
+		String[] args = c.getArgs();
+		if(args.length<3){
+			c.msg("need (at least) 3 args");return;
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		for(int i=2;i<args.length;i++){
+			sb.append(args[i]);sb.append(" ");
+		}
+		args[2] = sb.toString();
+		
+		
+		Value v;
+		switch(args[1].charAt(0)){
+		case 'i':v = new IntValue(Integer.parseInt(args[2]));break;
+		case 'd':v = new DoubleValue(Integer.parseInt(args[2]));break;
+		case 's':v = new StringValue(args[2]);break;
+		case 'v':
+			// weird one, this. We compile the rest of the arguments as action lang and get what's on the stack.
+			Conversation conv = ct.instance.getConversation(c.getPlayer());
+			StreamTokenizer tok = new StreamTokenizer(new StringReader(args[2]));
+			try {
+				InstructionStream str = new InstructionStream(ct.instance.bot, tok);
+				str.run(conv, true);
+				v = conv.pop();
+			} catch (IOException | ParserError | IllegalAccessException | IllegalArgumentException | InvocationTargetException | ActionException e) {
+				c.msg("Compile failed: "+e.getMessage());
+				return;
+			}
+			break;
+		default:c.msg("Bad type");return;
+		}
+		c.msg("Setting to "+v.str());
+		ct.instance.setVar(args[0], v);
 	}
 }
