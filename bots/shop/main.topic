@@ -1,0 +1,35 @@
+:isell
+    ?@givestring isnone if
+        ["I don't sell anything.", "Sorry, nothing is for sale.",
+        "I sell nothing."] choose.
+    else    
+        "I sell ". ?@givestring. ".".
+    then
+    out
+;
+
+:ibuy
+    ?@takestring isnone if
+        ["I don't buy anything.", "I'm afraid I don't buy anything",
+        "I buy nothing."] choose.
+    else    
+        "I buy ". ?@takestring. ".".
+    then
+    out
+;
+
+:exch
+    ?@exchange isnone if "" else
+        ["my medium of exchange is ${?@exchange}",
+        "I use ${?@exchange} as cash",
+        "I accept payment in ${?@exchange}",
+        "I use ${?@exchange} instead of cash"] choose
+    then
+;
+    
++(what .* sell) isell;
++(what .* buy) ibuy;
+
+:unknown
+    isell ibuy + exch + clean;
+

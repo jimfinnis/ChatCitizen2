@@ -79,7 +79,19 @@ public class ChatTrait extends Trait {
 
 	@Persist public double audibleDistance=10; //!< how far this robot is audible
 
-	public Map<String,Value> persistedVars = null;
+	static class PersistedVars {
+		Map<String,Value> vars;
+		PersistedVars(Map<String,Value> m) {
+			vars = m;
+		}
+	}
+	@Persist
+	public PersistedVars persistedVars = null;
+	
+	static {
+		PersistenceLoader.registerPersistDelegate(PersistedVars.class,ValueMapPersister.class);
+	}
+	
 	
 
 	// the actual chatbot
@@ -230,9 +242,9 @@ public class ChatTrait extends Trait {
 			// if this is a new bot it won't have any persisted vars. Use those in the bot instance,
 			// set up by init. Otherwise, use those in the persistence data.
 			if(persistedVars == null)
-				persistedVars = instance.getVars();
+				persistedVars = new PersistedVars(instance.getVars());
 			else
-				instance.setVars(persistedVars);
+				instance.setVars(persistedVars.vars);
 		} catch (BotConfigException e) {
 			Plugin.log("cannot configure bot "+b.getName());
 		}
