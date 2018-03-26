@@ -9,6 +9,7 @@ import java.util.Random;
 
 import net.citizensnpcs.api.persistence.Persist;
 import net.citizensnpcs.api.persistence.PersistenceLoader;
+import net.citizensnpcs.api.persistence.Persister;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
 import net.citizensnpcs.api.util.DataKey;
@@ -27,6 +28,7 @@ import org.pale.simplechat.BotInstance;
 import org.pale.simplechat.Conversation;
 import org.pale.simplechat.Logger;
 import org.pale.simplechat.actions.Function;
+import org.pale.simplechat.actions.Value;
 import org.pale.simplechat.values.NoneValue;
 import org.pale.simplechat.values.StringValue;
 
@@ -77,6 +79,9 @@ public class ChatTrait extends Trait {
 
 	@Persist public double audibleDistance=10; //!< how far this robot is audible
 
+	public Map<String,Value> persistedVars = null;
+	
+
 	// the actual chatbot
 	BotInstance instance = null;
 	private long lastRandSay;
@@ -84,7 +89,7 @@ public class ChatTrait extends Trait {
 	public String getBotName(){
 		return botName;
 	}
-
+	
 	List<Player> getNearPlayers(double d){
 		List<Player> r = new ArrayList<Player>();
 		// note the 1 - we have to be roughly on the same level.
@@ -105,6 +110,7 @@ public class ChatTrait extends Trait {
 	// This is called BEFORE onSpawn, npc.getBukkitEntity() will return null.
 	public void load(DataKey key) {
 //		SomeSetting = key.getBoolean("SomeSetting", false);
+		
 	}
 
 	// Save settings for this NPC (optional). These values will be persisted to the Citizens saves file
@@ -221,6 +227,12 @@ public class ChatTrait extends Trait {
 		try {
 			if(instance!=null)instance.remove();
 			instance = new BotInstance(b,npc.getFullName(),this);
+			// if this is a new bot it won't have any persisted vars. Use those in the bot instance,
+			// set up by init. Otherwise, use those in the persistence data.
+			if(persistedVars == null)
+				persistedVars = instance.getVars();
+			else
+				instance.setVars(persistedVars);
 		} catch (BotConfigException e) {
 			Plugin.log("cannot configure bot "+b.getName());
 		}
