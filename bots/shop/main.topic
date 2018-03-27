@@ -33,3 +33,45 @@
 :unknown
     isell ibuy + exch + clean;
 
+:showcost |m:mat|
+    ?m matname !mat
+    ?mat isnone if "I dont know what ${?m addarticle} is." stop then
+    ?mat ?@give in if
+        "I sell one of those for "
+        ?mat ?@give get ?@exchangeName pluralisenum +
+        clean.
+    else
+        ?@dontsell choose.
+    then
+;
+
+:prices
+    ?@give keys each loop 
+        i!i # because string embedding doesn't work with iterators
+        "${?i addarticle} costs ${?i ?@give get ?@exchangeName pluralisenum}" clean.
+        " ".
+    endloop
+;
+
+:values
+    ?@take keys each loop 
+        i addarticle
+        [" will get you "," is worth "] choose+
+        i ?@take get ?@exchangeName pluralisenum+
+        "." +
+        clean. " ".
+    endloop
+;
+    
+
++(how much .* give .*) values;
++(what .* give .*) values;
++(how much do .*) prices;
++(cost ?of ?[a an] $n=.*) $n showcost;
++(how much is ?[a an] $n=.*) $n showcost;
++(what does ?[a an] $n=.* cost) $n showcost;
++(how much .*) prices;
++(?what ?are ?your prices) prices;
++(?what ?are ?your values) values;
+
+        
