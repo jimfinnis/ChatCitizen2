@@ -1,0 +1,344 @@
+# matname,alternative singulars (:) separated,alternative plurals
+#
+AIR
+STONE,block of stone,blocks of stone
+GRASS,grass block
+DIRT,dirt block
+COBBLESTONE,cobblestone block
+WOOD,wood block
+SAPLING
+BEDROCK,block of bedrock,blocks of bedrocks
+WATER,water block
+STATIONARY_WATER,stationary water block
+LAVA,lava block
+STATIONARY_LAVA,stationary lava block
+SAND,sand block,blocks of sand
+GRAVEL,gravel block,blocks of gravel
+GOLD_ORE,block of gold ore,blocks of gold ore
+IRON_ORE,block of iron ore,blocks of iron ore
+COAL_ORE,block of coal ore,blocks of coal ore,
+LOG
+LEAVES,block of leaves,blocks of leaves
+SPONGE
+GLASS,glass block
+LAPIS_ORE,block of lapis ore,blocks of lapis ore
+LAPIS_BLOCK,block of lapis,blocks of lapis
+DISPENSER
+SANDSTONE,standstone block
+NOTE_BLOCK
+BED_BLOCK
+POWERED_RAIL
+DETECTOR_RAIL
+PISTON_STICKY_BASE
+WEB
+LONG_GRASS,block of long grass,blocks of long grass
+DEAD_BUSH
+PISTON_BASE
+PISTON_EXTENSION
+WOOL,block of wool,blocks of wool
+PISTON_MOVING_PIECE
+YELLOW_FLOWER
+RED_ROSE
+BROWN_MUSHROOM
+RED_MUSHROOM
+GOLD_BLOCK
+IRON_BLOCK
+DOUBLE_STEP
+STEP
+BRICK
+TNT,TNT block
+BOOKSHELF
+MOSSY_COBBLESTONE,mossy cobblestone block
+OBSIDIAN,obsidian block
+TORCH
+FIRE
+MOB_SPAWNER
+WOOD_STAIRS,wooden step
+CHEST
+REDSTONE_WIRE,bit of redstone wire,bits of redstone wire
+DIAMOND_ORE,block of diamond ore,blocks of diamond ore
+DIAMOND_BLOCK,diamond blocks
+WORKBENCH
+CROPS,crop block
+SOIL,block of soil,blocks of soil
+FURNACE
+BURNING_FURNACE
+SIGN_POST
+WOODEN_DOOR
+LADDER
+RAILS,rail
+COBBLESTONE_STAIRS,cobblestone step
+WALL_SIGN
+LEVER
+STONE_PLATE
+IRON_DOOR_BLOCK
+WOOD_PLATE
+REDSTONE_ORE,block of redstone ore,blocks of redstone ore
+GLOWING_REDSTONE_ORE,block of glowing redstone ore,blocks of glowing redstone ore
+REDSTONE_TORCH_OFF
+REDSTONE_TORCH_ON
+STONE_BUTTON
+SNOW,snow block
+ICE,ice block
+SNOW_BLOCK
+CACTUS,cactus,cacti
+CLAY,block of clay,blocks of clay
+SUGAR_CANE_BLOCK,block of sugar cane,blocks of sugar cane
+JUKEBOX
+FENCE
+PUMPKIN
+NETHERRACK,block of netherrack,blocks of netherrack
+SOUL_SAND,block of soul sand,blocks of soul sand
+GLOWSTONE,block of glowstone,block of glowstone
+PORTAL
+JACK_O_LANTERN
+CAKE_BLOCK,block of cake,blocks of cake
+DIODE_BLOCK_OFF
+DIODE_BLOCK_ON
+STAINED_GLASS,block of stained glass,blocks of stained glass
+TRAP_DOOR
+MONSTER_EGGS
+SMOOTH_BRICK,block of smooth brick,blocks of smooth brick
+HUGE_MUSHROOM_1
+HUGE_MUSHROOM_2
+IRON_FENCE
+THIN_GLASS,pane of glass,panes of glass
+MELON_BLOCK,block of melon,blocks of melon
+PUMPKIN_STEM
+MELON_STEM
+VINE
+FENCE_GATE
+BRICK_STAIRS,brick step
+SMOOTH_STAIRS,smooth step
+MYCEL
+WATER_LILY
+NETHER_BRICK
+NETHER_FENCE
+NETHER_BRICK_STAIRS,nether brick step
+NETHER_WARTS,nether wart,nether warts
+ENCHANTMENT_TABLE
+BREWING_STAND
+CAULDRON
+ENDER_PORTAL
+ENDER_PORTAL_FRAME
+ENDER_STONE,block of Ender stone,blocks of Ender stone
+DRAGON_EGG
+REDSTONE_LAMP_OFF
+REDSTONE_LAMP_ON
+WOOD_DOUBLE_STEP,double wooden slab
+WOOD_STEP,wooden slab
+COCOA
+SANDSTONE_STAIRS,sandstone step
+EMERALD_ORE,block of emerald ore,blocks of emerald ore
+ENDER_CHEST
+TRIPWIRE_HOOK
+TRIPWIRE
+EMERALD_BLOCK,emerald block
+SPRUCE_WOOD_STAIRS,spruce step
+BIRCH_WOOD_STAIRS,birch step
+JUNGLE_WOOD_STAIRS,jungle wood step
+COMMAND
+BEACON
+COBBLE_WALL,cobblestone wall
+FLOWER_POT
+CARROT
+POTATO
+WOOD_BUTTON
+SKULL
+ANVIL
+TRAPPED_CHEST
+GOLD_PLATE
+IRON_PLATE
+REDSTONE_COMPARATOR_OFF
+REDSTONE_COMPARATOR_ON
+DAYLIGHT_DETECTOR
+REDSTONE_BLOCK
+QUARTZ_ORE,block of quartz ore,blocks of quartz ore
+HOPPER
+QUARTZ_BLOCK,quartz block
+QUARTZ_STAIRS,quartz step
+ACTIVATOR_RAIL
+DROPPER
+STAINED_CLAY,block of stained clay,blocks of stained clay
+STAINED_GLASS_PANE,pane of stained glass,panes of stained glass
+LEAVES_2,block of leaves,blocks of leaves
+LOG_2,log
+ACACIA_STAIRS,acacia step
+DARK_OAK_STAIRS,dark oak step
+HAY_BLOCK,block of hay,blocks of hay
+CARPET,square of carpet,squares of carpet
+HARD_CLAY,block of hardened clay,blocks of hardened clay
+COAL_BLOCK,block of coal,blocks of coal
+PACKED_ICE,block of packed ice,blocks of packed ice
+DOUBLE_PLANT
+IRON_SPADE
+IRON_PICKAXE
+IRON_AXE
+FLINT_AND_STEEL
+APPLE
+BOW
+ARROW
+COAL,lump of coal,lumps of coal
+DIAMOND
+IRON_INGOT
+GOLD_INGOT
+IRON_SWORD
+WOOD_SWORD,wooden sword
+WOOD_SPADE,wooden spade
+WOOD_PICKAXE,wooden pickaxe
+WOOD_AXE,wooden axe
+STONE_SWORD
+STONE_SPADE
+STONE_PICKAXE
+STONE_AXE
+DIAMOND_SWORD
+DIAMOND_SPADE
+DIAMOND_PICKAXE
+DIAMOND_AXE
+STICK
+BOWL
+MUSHROOM_SOUP,bowl of soup,bowls of soup
+GOLD_SWORD
+GOLD_SPADE
+GOLD_PICKAXE
+GOLD_AXE
+STRING
+FEATHER
+SULPHUR,bit of gunpowder,bits of gunpowder
+WOOD_HOE
+STONE_HOE
+IRON_HOE
+DIAMOND_HOE
+GOLD_HOE
+SEEDS,seed
+WHEAT,bag of wheat,bags of wheat
+BREAD,loaf of bread,loaves of bread
+LEATHER_HELMET
+LEATHER_CHESTPLATE
+LEATHER_LEGGINGS
+LEATHER_BOOTS
+CHAINMAIL_HELMET
+CHAINMAIL_CHESTPLATE
+CHAINMAIL_LEGGINGS
+CHAINMAIL_BOOTS
+IRON_HELMET
+IRON_CHESTPLATE
+IRON_LEGGINGS
+IRON_BOOTS
+DIAMOND_HELMET
+DIAMOND_CHESTPLATE
+DIAMOND_LEGGINGS
+DIAMOND_BOOTS
+GOLD_HELMET
+GOLD_CHESTPLATE
+GOLD_LEGGINGS
+GOLD_BOOTS
+FLINT
+PORK,pork chop
+GRILLED_PORK,grilled pork chop
+PAINTING
+GOLDEN_APPLE
+SIGN
+WOOD_DOOR,wooden door
+BUCKET
+WATER_BUCKET,bucket of water,buckets of water
+LAVA_BUCKET,bucket of lava,buckets of lava
+MINECART
+SADDLE
+IRON_DOOR
+REDSTONE,bit of redstone,bits of redstone
+SNOW_BALL,snowball
+BOAT
+LEATHER,cowskin
+MILK_BUCKET,bucket of milk,buckets of milk
+CLAY_BRICK
+CLAY_BALL
+SUGAR_CANE
+PAPER,piece of paper,pieces of paper
+BOOK
+SLIME_BALL
+STORAGE_MINECART
+POWERED_MINECART
+EGG
+COMPASS
+FISHING_ROD
+WATCH
+GLOWSTONE_DUST,bit of glowstone dust,bits of glowstone dust
+RAW_FISH
+COOKED_FISH
+INK_SACK
+BONE
+SUGAR,lump of sugar,lumps of sugar
+CAKE
+BED
+DIODE
+COOKIE
+MAP
+SHEARS,pair of shears,pairs of shears
+MELON
+PUMPKIN_SEEDS,pumpkin seed
+MELON_SEEDS,melon seed
+RAW_BEEF,steak
+COOKED_BEEF,cooked steak
+RAW_CHICKEN,chicken
+COOKED_CHICKEN,cooked chicken
+ROTTEN_FLESH,lump of rotten flesh,lumps of rotten flesh
+ENDER_PEARL
+BLAZE_ROD
+GHAST_TEAR
+GOLD_NUGGET
+NETHER_STALK
+POTION
+GLASS_BOTTLE
+SPIDER_EYE
+FERMENTED_SPIDER_EYE
+BLAZE_POWDER,bit of blaze powder,bits of blaze powder
+MAGMA_CREAM,bit of magma cream,bits of magma cream
+BREWING_STAND_ITEM
+CAULDRON_ITEM
+EYE_OF_ENDER
+SPECKLED_MELON
+MONSTER_EGG
+EXP_BOTTLE
+FIREBALL
+BOOK_AND_QUILL
+WRITTEN_BOOK
+EMERALD
+ITEM_FRAME
+FLOWER_POT_ITEM
+CARROT_ITEM
+POTATO_ITEM
+BAKED_POTATO
+POISONOUS_POTATO
+EMPTY_MAP
+GOLDEN_CARROT
+SKULL_ITEM
+CARROT_STICK,carrot and stick,carrots and sticks
+NETHER_STAR
+PUMPKIN_PIE
+FIREWORK
+FIREWORK_CHARGE
+ENCHANTED_BOOK
+REDSTONE_COMPARATOR
+NETHER_BRICK_ITEM
+QUARTZ,bits of quartz,bits of quartz
+EXPLOSIVE_MINECART
+HOPPER_MINECART
+IRON_BARDING
+GOLD_BARDING
+DIAMOND_BARDING
+LEASH
+NAME_TAG
+COMMAND_MINECART
+GOLD_RECORD
+GREEN_RECORD
+RECORD_3
+RECORD_4
+RECORD_5
+RECORD_6
+RECORD_7
+RECORD_8
+RECORD_9
+RECORD_10
+RECORD_11
+RECORD_12

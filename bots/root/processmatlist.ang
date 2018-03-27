@@ -1,0 +1,106 @@
+`io library drop
+`regex library drop
+
+[%] !Singulars
+[%] !Plurals
+[] !MatNames
+
+"_and_" regex$compile !AndWord
+"sh$" regex$compile !EndSh
+"ch$" regex$compile !EndCh
+
+"_" regex$compile !Underscore
+
+:pluralize |s:| 
+    cases
+        "_and_" ?s in if ?s "s_and_" ?AndWord regex$repl case
+        ?s ?EndSh regex$match len 1>= if ?s "es"+ case
+        ?s ?EndCh regex$match len 1>= if ?s "es"+ case
+    ?s "s"+ otherwise
+;
+
+:quote |s:| 
+    ?s " " ?Underscore regex$repl !s
+    "\"" ?s + "\"" +;
+
+:outhash |h:ct|
+    "[% "
+    [] ?h each {
+        "`" i + " [" + # hash label and open bracket for list
+        ival ?quote map
+        "," intercalate + "]" +,
+    } ",\n" intercalate+
+    " ]" +
+;
+
+:addtohash |things,name,hash:t|
+    ":" ?things in if
+        ?things ":" split !t
+    else
+        [?things] !t
+    then
+    ?t ?name ?hash set
+;
+
+(|:m|
+    "matlist" "r" io$open each {
+        i fst "#" != if
+            "," i in if
+                i ","  split !L
+                ?L fst lowercase !m
+                ?m ?MatNames push
+                ?L len 1 > if
+                    ?L snd ?m ?Singulars addtohash 
+                then
+                ?L len 2 > if
+                    ?L third ?m ?Plurals addtohash
+                then
+            else
+                i lowercase !m
+                ?m ?MatNames push
+                ?m ?m ?Singulars addtohash
+                ?m "s" + ?m ?Plurals addtohash
+            then
+        then
+    }
+    
+    ":defmats".
+    
+    
+#    "[ " ?MassNouns ("`" swap +) map ", " intercalate + " ] !@MassNouns" +
+#    100 wrap.
+    
+    ?Singulars outhash "\n!@MaterialSingulars" +.
+    nl nl
+    ?Plurals outhash "\n!@MaterialPlurals" +.
+    ";".
+    
+    
+    # now output categories, one for each material
+    ?MatNames each {
+        "~" i lowercase + " = [ " +
+        [i lowercase]
+        i ?Singulars in if 
+            i ?Singulars get +
+        then
+        i ?Plurals in if 
+            i ?Plurals get +
+        then
+        i ?Singulars in if 
+            i ?Singulars get ?pluralize map +
+        then
+        i lowercase pluralize,
+        (tostr) map ?quote map unique " " intercalate+
+        " ]" +.
+    }
+    
+    # and a megacategory for all materials
+    "~material = [".
+    ?MatNames (lowercase "~" swap +) map " "intercalate 100 wrap.
+    "]" .
+    
+    
+    
+)@ quit
+
+

@@ -1,3 +1,12 @@
+:hourscheck
+    # returns 1 if we should abandon the function
+    `todstring mctime ?@hours in if
+        0
+    else
+        ?@notopen choose. 1
+    then
+;
+
 :isell
     ?@givestring isnone if
         ["I don't sell anything.", "Sorry, nothing is for sale.",
@@ -31,9 +40,12 @@
 +(what .* buy) ibuy;
 
 :unknown
+    hourscheck if stop then
     isell ibuy + exch + clean;
 
 :showcost |m:mat|
+    hourscheck if stop then
+
     ?m matname !mat
     ?mat isnone if "I dont know what ${?m addarticle} is." stop then
     ?mat ?@give in if
@@ -46,22 +58,61 @@
 ;
 
 :prices
+    hourscheck if stop then
+
     ?@give keys each loop 
         i!i # because string embedding doesn't work with iterators
-        "${?i addarticle} costs ${?i ?@give get ?@exchangeName pluralisenum}" clean.
+        "${?i getSingularMatName addarticle} costs ${?i ?@give get ?@exchangeName pluralisenum}"
+        clean.
         " ".
     endloop
 ;
 
-:values
+:values |:ct|
+    hourscheck if stop then
+
+    []
     ?@take keys each loop 
-        i addarticle
-        [" will get you "," is worth "] choose+
-        i ?@take get ?@exchangeName pluralisenum+
-        "." +
-        clean. " ".
+        i ?@take get i getMaterialNameAndNumber,
     endloop
+    listendwithor.
+    [" will each get you one ", 
+    "are each worth one "] choose. ?@exchangeName.
+    out clean
 ;
+
+:attemptsetbuy |m:price|
+    hourscheck if stop then
+
+    # first turn the string we got into a subcategory of ~material
+    # (which we know it must be, as it's in ~material)
+    ?m ~material subcat !m
+
+    # then get the price, and check we actually sell these.
+        
+    ?m ?@give get !price
+    ?price isnone if
+        ?@dontsell choose.
+    else
+        "You are buying ".
+        ?m !buyingItem # set the conversation variable
+        ?m getPluralMatName.
+    then
+    out clean
+;
+
+:buywhat
+    {
+        +[something anything] "Please tell me what!" holdnext;
+        +$c=~material $c attemptsetbuy;
+        +(what .+) prices;
+        +(.*) ?@dontsell choose;
+    } next
+;
+
++(.* buy $c=~material) $c attemptsetbuy;
++(.* buy .+) ?@dontsell choose.;
++(.* buy) "Yes, we've established that. But what?". buywhat;
     
 
 +(how much .* give .*) values;
@@ -74,4 +125,9 @@
 +(?what ?are ?your prices) prices;
 +(?what ?are ?your values) values;
 
-        
++$c=~material
+    $c attemptsetbuy;        
+
+
+
++.* unknown;

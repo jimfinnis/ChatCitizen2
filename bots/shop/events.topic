@@ -1,8 +1,73 @@
+:RIGHTCLICK |:t|
+    hourscheck if stop then
+    ?itemheld ?@exchange = if
+
+        # we are holding the exchange item (i.e. my money type)
+        
+        ?buyingItem isnone not if   
+
+            # we are buying something (set in conversation in attemptsetbuy)
+            # so try to take that number of exchange items
+
+            ?buyingItem ?@give get ?@exchange take !t
+            
+            # print some status
+            cases
+                ?t "UNKNOWN" = if "I don't know what that is.". case
+                ?t "NOITEM" = if ?@noitem choose. case
+                ?t "WRONG" = if ?@wrong choose. case
+                ?t "OK" = if 
+
+                    # if it worked, print thanks and give the player 1 of the
+                    # item they are after.
+
+                    ?@thanks choose.
+                    1 ?buyingItem give drop # throw away the results of the give.
+                case
+                # print this if some weird code was returned from the take.
+                "Well, that's weird. Did you feel that?".
+             otherwise
+        else
+            # we are holding the exchange item but we don't want to buy anything!
+            # This will trigger a conversational pattern.
+            "Nice of you, but what are you buying?". buywhat
+        then   
+    else
+
+        # we aren't holding the exchange item    
+
+        ?itemheld "NOITEM" = if
+            # we're holding nothing, that's cheeky!
+            ?@noitem choose.
+        else
+            # we are holding something - is it something we buy?
+            ?itemheld ?@take get !t
+            ?t isnone if
+                # it isn't (we don't have a value for it in ?@take)
+                ?@wrong choose.
+            else
+                # it is! Try to take the appropriate number.
+                ?t ?itemheld take !t
+                cases
+                    ?t "UNKNOWN" = if "That's a very odd object.". case
+                    ?t "NOITEM" = if "A handful of air...". case
+                    ?t "WRONG" = if "The wrong item.". case
+                    ?t "NOTENOUGH" = if ?@notenough choose. case
+                    ?t "OK" = if
+                        # that worked, so give 1 exchange item.
+                        ?@thanks choose.
+                        1 ?@exchange give drop
+                    case
+                # in case the take returned something weird.
+                "Oooh, shivery.". otherwise
+            then
+        then
+    then
+    out clean      
+;
+
 :pleasestop
     ["Ow!","Hey!","Ouch!","Stop that!","What was that for?"] choose;
-
-:RIGHTCLICK pleasestop;
-
 
 :ENTITYHITME pleasestop;
 :PLAYERHITME pleasestop;

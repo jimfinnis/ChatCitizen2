@@ -1,8 +1,5 @@
 package org.pale.chatcitizen2;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.bukkit.Material;
 
 public class MaterialNameParser {
@@ -37,16 +34,4 @@ public class MaterialNameParser {
 			}
 		}
 	}
-	
-	
-	// not using this right now but might be handy.
-	private static Set<String> makeSet(String... strings) {
-	    HashSet<String> set = new HashSet<String>();
-
-	    for (String s : strings) {
-	        set.add(s);
-	    }
-	    return set;
-	}
-
 }

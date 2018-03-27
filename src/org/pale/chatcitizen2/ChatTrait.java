@@ -142,7 +142,10 @@ public class ChatTrait extends Trait {
 				Player p = event.getClicker();
 				ItemStack held = p.getInventory().getItemInMainHand();
 				// shouldn't be necessary, but it does seem odd that an empty hand is full of air...
-				String hstr = (held==null)?"air":held.getType().toString();
+				String hstr = (held==null)?"NOITEM":held.getType().toString();
+				hstr = hstr.toLowerCase();
+				if(hstr.equals("air"))hstr="NOITEM";
+				
 				Conversation c = instance.getConversation(p);
 				c.setVar("itemheld",new StringValue(hstr));
 				respondToFunc("RIGHTCLICK", p);
