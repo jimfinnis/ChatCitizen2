@@ -12,7 +12,6 @@ import org.pale.simplechat.values.DoubleValue;
 import org.pale.simplechat.values.IntValue;
 import org.pale.simplechat.values.ListValue;
 import org.pale.simplechat.values.MapValue;
-import org.pale.simplechat.values.NoneValue;
 import org.pale.simplechat.values.RangeValue;
 import org.pale.simplechat.values.StringValue;
 

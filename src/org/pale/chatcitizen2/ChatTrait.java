@@ -78,6 +78,8 @@ public class ChatTrait extends Trait {
 	@Persist public double greetProbability = 0.9; //!< how likely is it we will greet a player? If this fails, we just ignore them.
 
 	@Persist public double audibleDistance=10; //!< how far this robot is audible
+	
+	@Persist public int spawnCount=0; //!< number of times spawned
 
 	static class PersistedVars {
 		Map<String,Value> vars;
@@ -235,16 +237,29 @@ public class ChatTrait extends Trait {
 		nddat = plugin.ndPlugin.makeData(npc);
 	}
 
-	public void setBot(Bot b){
+	/**
+	 * Change the bot. If reset is true, will cause the spawn count to be reset and the 
+	 * init clauses to run - typically done when changing the bot by a command.
+	 * @param b
+	 * @param reset
+	 */
+	public void setBot(Bot b, boolean reset){
 		try {
 			if(instance!=null)instance.remove();
 			instance = new BotInstance(b,npc.getFullName(),this);
 			// if this is a new bot it won't have any persisted vars. Use those in the bot instance,
 			// set up by init. Otherwise, use those in the persistence data.
-			if(persistedVars == null)
+			if(persistedVars == null) {
+				Plugin.log("Setting persisted vars to wrap existing instance vars");
 				persistedVars = new PersistedVars(instance.getVars());
-			else
+			} else {
+				Plugin.log("Setting instance vars to contents of persisted vars");
 				instance.setVars(persistedVars.vars);
+			}
+			if(reset)spawnCount=0;
+			if(spawnCount==0)
+				instance.runInits();
+			spawnCount++;
 		} catch (BotConfigException e) {
 			Plugin.log("cannot configure bot "+b.getName());
 		}
@@ -270,7 +285,7 @@ public class ChatTrait extends Trait {
 		if(b==null)
 			throw new RuntimeException("bot \""+botName+"\" not found - is it in the config?");
 
-		setBot(b);
+		setBot(b,false);
 
 		plugin.addChatter(npc);
 		Plugin.log(" Spawn run on "+npc.getFullName());
