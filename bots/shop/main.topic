@@ -1,5 +1,7 @@
 :hourscheck
-    # returns 1 if we should abandon the function
+    # Writes a message to the output saying "we're closed" and
+    # returns 1 if we should abandon the function. Lots of things
+    # call this.
     `todstring mctime ?@hours in if
         0
     else
@@ -7,83 +9,148 @@
     then
 ;
 
-:isell
-    ?@givestring isnone if
-        ["I don't sell anything.", "Sorry, nothing is for sale.",
-        "I sell nothing."] choose.
-    else    
-        "I sell ". ?@givestring. ".".
-    then
-    out
-;
+# function to output what I buy
 
 :ibuy
-    ?@takestring isnone if
+    ?@take isnone if
         ["I don't buy anything.", "I'm afraid I don't buy anything",
-        "I buy nothing."] choose.
+        "I buy nothing."] choose
     else    
-        "I buy ". ?@takestring. ".".
+        "I buy "
+
+        # build a list of the keys, each converted to
+        # an English plural form (the keys are material names).
+        # The [] item, item, item... way of forming a list is a nice
+        # side-effect of how lists work in Action Language, and is carried
+        # over from my Angort language.
+        
+        [] ?@take keys each loop
+            # this function is in root/mats.conf
+            i getPluralMatName,
+        endloop
+        # and turn that list into a comma-separated list terminated with
+        # an "and". This function is in root/utils.conf.
+        listendwithand+
     then
-    out
+    clean
 ;
 
-:exch
-    ?@exchange isnone if "" else
-        ["my medium of exchange is ${?@exchange}",
-        "I use ${?@exchange} as cash",
-        "I accept payment in ${?@exchange}",
-        "I use ${?@exchange} instead of cash"] choose
++test
+    [?@give,?@take,?@exchange,?buyingItem] "," join.
+    [?@give type,?@take type,?@exchange type,?buyingItem type] "," join.
+;
+
+# function to output what I sell. See the ibuy function above for 
+# how it works.
+
+:isell
+    ?@give isnone if
+        ["I don't sell anything.", "Sorry, nothing is for sale.",
+        "I sell nothing."] choose
+    else    
+        "I sell "
+        [] ?@give keys each loop
+            i getPluralMatName,
+        endloop listendwithand+
+    then
+    clean
+;
+
+# and a function to tell the user what my "medium of exchange" is,
+# i.e. what I use as cash.
+
+:exch |:t|
+    ?@exchange isnone if "I have no medium of exchange because I don't trade." else
+        ?@exchange getPluralMatName !t
+        ["my medium of exchange is ${?t}",
+        "I use ${?t} as cash",
+        "I accept payment in ${?t}",
+        "I use ${?t} instead of cash"] choose
     then
 ;
     
-+(what .* sell) isell;
++(what .* [sale sell]) isell;
 +(what .* buy) ibuy;
 
-:unknown
+# function to just print everything about me. It's used in
+# the catchall topic.
+
+:describe
     hourscheck if stop then
-    isell ibuy + exch + clean;
+    isell ibuy+ exch+ clean
+ ;
+
+# show the cost of item named in m
 
 :showcost |m:mat|
     hourscheck if stop then
+    
+    # quick check for a null give map (i.e. we haven't set it,
+    # and so don't sell anything)
+    ?@give isnone if
+        ["I don't sell that. In fact, I don't sell anything.",
+        "I don't sell anything!"] choose.
+    stop then
+        
 
     ?m matname !mat
     ?mat isnone if "I dont know what ${?m addarticle} is." stop then
     ?mat ?@give in if
         "I sell one of those for "
-        ?mat ?@give get ?@exchangeName pluralisenum +
+        ?mat ?@give get ?@exchange getMaterialNameAndNumber +
         clean.
     else
         ?@dontsell choose.
     then
 ;
 
+# show all my prices for what I sell
+
 :prices
     hourscheck if stop then
 
+    # quick check for a null give map (i.e. we haven't set it,
+    # and so don't sell anything)
+    ?@give isnone if isell stop then
+
     ?@give keys each loop 
         i!i # because string embedding doesn't work with iterators
-        "${?i getSingularMatName addarticle} costs ${?i ?@give get ?@exchangeName pluralisenum}"
+        "${?i getSingularMatName addarticle} "
+        "costs ${?i ?@give get ?@exchange getMaterialNameAndNumber}"+
         clean.
         " ".
     endloop
 ;
 
+# function to show the values of what I buy, how many exchange items
+# I will give for them.
+
 :values |:ct|
     hourscheck if stop then
-
+    
+    # quick check for a null take map (i.e. we haven't set it,
+    # and so don't buy anything)
+    ?@take isnone if ibuy stop then
+    
     []
     ?@take keys each loop 
         i ?@take get i getMaterialNameAndNumber,
     endloop
     listendwithor.
     [" will each get you one ", 
-    "are each worth one "] choose. ?@exchangeName.
+    "are each worth one "] choose . ?@exchange getSingularMatName.
     out clean
 ;
 
+# try to set m as the item the user is buying, checking we
+# actually sell it. The variable m holds a material category
+# (see mats.conf in root)
+
 :attemptsetbuy |m:price|
     hourscheck if stop then
-
+    
+    ?@give isnone if isell stop then
+        
     # first turn the string we got into a subcategory of ~material
     # (which we know it must be, as it's in ~material)
     ?m ~material subcat !m
@@ -101,6 +168,9 @@
     out clean
 ;
 
+# this is called when the user says they want to buy something
+# but not what. It triggers a little conversation.
+
 :buywhat
     {
         +[something anything] "Please tell me what!" holdnext;
@@ -109,6 +179,8 @@
         +(.*) ?@dontsell choose;
     } next
 ;
+
+# patterns for setting what to buy.
 
 +(.* buy $c=~material) $c attemptsetbuy;
 +(.* buy .+) ?@dontsell choose.;
@@ -125,9 +197,8 @@
 +(?what ?are ?your prices) prices;
 +(?what ?are ?your values) values;
 
+# here we just matched a raw material name.
+
 +$c=~material
     $c attemptsetbuy;        
 
-
-
-+.* unknown;

@@ -12,6 +12,7 @@ import org.pale.simplechat.values.DoubleValue;
 import org.pale.simplechat.values.IntValue;
 import org.pale.simplechat.values.ListValue;
 import org.pale.simplechat.values.MapValue;
+import org.pale.simplechat.values.NoneValue;
 import org.pale.simplechat.values.RangeValue;
 import org.pale.simplechat.values.StringValue;
 
@@ -28,6 +29,8 @@ public class ValueMapPersister implements Persister<ChatTrait.PersistedVars> {
 	private static final int DOUBLE = 3;
 	private static final int RANGE = 4;
 	private static final int MAP = 5;
+	private static final int NONE = 6;
+	
 
 	
 
@@ -57,6 +60,8 @@ public class ValueMapPersister implements Persister<ChatTrait.PersistedVars> {
 					mv.map.put(k.name(), v);
 			}
 			return mv;
+		case NONE:
+			return null;
 		default:
 			Plugin.log("Attempt to retrieve a bad type, returning none instead");
 			return null;
@@ -96,6 +101,8 @@ public class ValueMapPersister implements Persister<ChatTrait.PersistedVars> {
 			for(Entry<String,Value> e: map.map.entrySet()){
 				saveValue(e.getValue(),maproot.getRelative(e.getKey()));
 			}
+		} else if(v instanceof NoneValue){
+			root.setInt("type", NONE);
 		}
 	}
 
@@ -106,6 +113,8 @@ public class ValueMapPersister implements Persister<ChatTrait.PersistedVars> {
 			Value v = createValue(k);
 			if(v!=null)
 				map.put(k.name(), v);
+			else
+				map.remove(k.name());
 		}
 		return new ChatTrait.PersistedVars(map);
 	}

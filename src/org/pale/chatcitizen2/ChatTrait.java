@@ -9,7 +9,6 @@ import java.util.Random;
 
 import net.citizensnpcs.api.persistence.Persist;
 import net.citizensnpcs.api.persistence.PersistenceLoader;
-import net.citizensnpcs.api.persistence.Persister;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
 import net.citizensnpcs.api.util.DataKey;
@@ -26,8 +25,6 @@ import org.pale.simplechat.Bot;
 import org.pale.simplechat.BotConfigException;
 import org.pale.simplechat.BotInstance;
 import org.pale.simplechat.Conversation;
-import org.pale.simplechat.Logger;
-import org.pale.simplechat.actions.Function;
 import org.pale.simplechat.actions.Value;
 import org.pale.simplechat.values.NoneValue;
 import org.pale.simplechat.values.StringValue;

@@ -4,7 +4,10 @@
 
         # we are holding the exchange item (i.e. my money type)
         
-        ?buyingItem isnone not if   
+        ?buyingItem isnone not if
+            ?@give isnone if
+                "You're buying something but I don't sell. How odd.". stop
+            then
 
             # we are buying something (set in conversation in attemptsetbuy)
             # so try to take that number of exchange items
@@ -41,6 +44,12 @@
             ?@noitem choose.
         else
             # we are holding something - is it something we buy?
+            ?@take isnone if
+                ["I'm sorry, I don't buy anything.",
+                "I don't buy anything.",
+                "I don't buy anything, " honor +
+               ] choose. stop
+            then
             ?itemheld ?@take get !t
             ?t isnone if
                 # it isn't (we don't have a value for it in ?@take)

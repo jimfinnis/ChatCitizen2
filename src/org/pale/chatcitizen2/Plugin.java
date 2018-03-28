@@ -8,7 +8,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -362,6 +361,30 @@ public class Plugin extends JavaPlugin {
 		} else {
 			ct.setBot(b,true);
 			c.msg(ct.getNPC().getFullName()+" is now using bot \""+name+"\".");
+		}
+	}
+	
+	@Cmd(desc="set a special parameter for an NPC",argc=2,usage="<param name> <value>",cz=true,permission="chatcitizen.set")
+	public void setparam(CallInfo c){
+		// this calls SETPARAM if it is defined, which should be a function with the picture (val param -- [string]).
+		// Both parameters are strings.
+		// It operates like a runFunc, in that any value left on the stack is output, and if the stack is empty
+		// the output buffer is output.
+		// It's typically used to set bot-specific parameters.
+		String name = c.getArgs()[0];
+		String val = c.getArgs()[1];
+		ChatTrait ct = c.getCitizen();
+		Conversation conv = ct.instance.getConversation(ct);
+		if(conv==null){
+			c.msg(ChatColor.RED+"wut?");return;
+		}
+		try {
+			conv.push(new StringValue(val));
+			conv.push(new StringValue(name));
+			String msg = conv.runFunc("SETPARAM");
+			c.msg(ChatColor.AQUA+msg);
+		} catch (ActionException e) {
+			c.msg(ChatColor.RED+e.getMessage());
 		}
 	}
 
