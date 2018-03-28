@@ -33,3 +33,11 @@ work.
 == Special functions.
 There are a few. For now, you can work them out from the `extensions` package.
 
+== General notes
+
+- Instance variables are persisted. Persisted data is bad - when the chunks
+are loaded and unloaded, so is the persistent data for all bots therein.
+Use as few instance variables as you can. If your bot has a lot of static
+data, set it up in "global" rather than "init" blocks so only one copy
+is loaded at startup.
+

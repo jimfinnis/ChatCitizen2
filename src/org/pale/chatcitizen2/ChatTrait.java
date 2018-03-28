@@ -249,7 +249,7 @@ public class ChatTrait extends Trait {
 			instance = new BotInstance(b,npc.getFullName(),this);
 			// if this is a new bot it won't have any persisted vars. Use those in the bot instance,
 			// set up by init. Otherwise, use those in the persistence data.
-			if(persistedVars == null) {
+			if(reset || persistedVars == null || persistedVars.vars.size()==0) {
 				Plugin.log("Setting persisted vars to wrap existing instance vars");
 				persistedVars = new PersistedVars(instance.getVars());
 			} else {
@@ -260,6 +260,10 @@ public class ChatTrait extends Trait {
 			if(spawnCount==0)
 				instance.runInits();
 			spawnCount++;
+			Plugin.log("There are "+persistedVars.vars.size()+" persisted vars.");
+			for(String s: persistedVars.vars.keySet()){
+				Plugin.log("    "+s);
+			}
 		} catch (BotConfigException e) {
 			Plugin.log("cannot configure bot "+b.getName());
 		}
