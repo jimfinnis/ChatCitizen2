@@ -41,3 +41,18 @@ Use as few instance variables as you can. If your bot has a lot of static
 data, set it up in "global" rather than "init" blocks so only one copy
 is loaded at startup.
 
+=== subbots
+
+Two ways to do subbots, First way
+(less data, more config) is to write another bot which inherits all
+of the first bot's stuff and changes a few things. Demonstrated in
+`shop2` which inherits `shop` topics and globals, and changes globals.
+Useful if you want to have several instances of the inherited bot,
+or want to change function definitions or topics (although you'll have to
+write the inherited the topic lists rather than using `topics inherit`)
+but there's more config work.
+
+The other way is to use `SETPARAM` to override some of the global vars:
+big disadvantage is that each instance carries the overriding data, which
+then has to be saved. Probably best to avoid, since this will slow down
+the server on chunk load/unload.

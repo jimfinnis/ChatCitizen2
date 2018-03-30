@@ -5,20 +5,21 @@
         # we are holding the exchange item (i.e. my money type)
         
         ?buyingItem isnone not if
-            ?@give isnone if
+            ?@thingsisell isnone if
                 "You're buying something but I don't sell. How odd.". stop
             then
 
             # we are buying something (set in conversation in attemptsetbuy)
             # so try to take that number of exchange items
 
-            ?buyingItem ?@give get ?@exchange take !t
+            ?buyingItem ?@thingsisell get ?@exchange take !t
             
             # print some status
             cases
                 ?t "UNKNOWN" = if "I don't know what that is.". case
                 ?t "NOITEM" = if ?@noitem choose. case
                 ?t "WRONG" = if ?@wrong choose. case
+                ?t "NOTENOUGH" = if ?@notenough choose. case
                 ?t "OK" = if 
 
                     # if it worked, print thanks and give the player 1 of the
@@ -29,6 +30,7 @@
                 case
                 # print this if some weird code was returned from the take.
                 "Well, that's weird. Did you feel that?".
+                ?t.
              otherwise
         else
             # we are holding the exchange item but we don't want to buy anything!
@@ -44,15 +46,15 @@
             ?@noitem choose.
         else
             # we are holding something - is it something we buy?
-            ?@take isnone if
+            ?@thingsibuy isnone if
                 ["I'm sorry, I don't buy anything.",
                 "I don't buy anything.",
                 "I don't buy anything, " honor +
                ] choose. stop
             then
-            ?itemheld ?@take get !t
+            ?itemheld ?@thingsibuy get !t
             ?t isnone if
-                # it isn't (we don't have a value for it in ?@take)
+                # it isn't (we don't have a value for it in ?@thingsibuy)
                 ?@wrong choose.
             else
                 # it is! Try to take the appropriate number.

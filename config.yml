@@ -8,8 +8,12 @@ bots:
 #    pub: "plugins/ChatCitizen/bots/pub"
 
     root: "plugins/ChatCitizen/bots/root"
+    serviceprovider: "plugins/ChatCitizen/bots/serviceprovider"
+
     pub: "plugins/ChatCitizen/bots/root"
     poet: "plugins/ChatCitizen/bots/root"
-    shop: "plugins/ChatCitizen/bots/root"
+    shop: "plugins/ChatCitizen/bots/shop"
+    shop2: "plugins/ChatCitizen/bots/shop2"
     fuchsia: "plugins/ChatCitizen/bots/root"
     soldier: "plugins/ChatCitizen/bots/soldier"
+    bookshop: "plugins/ChatCitizen/bots/bookshop"

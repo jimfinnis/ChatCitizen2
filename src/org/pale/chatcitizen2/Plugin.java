@@ -359,7 +359,7 @@ public class Plugin extends JavaPlugin {
 		if(b==null){
 			c.msg("\""+name+"\" is not installed on this server.");
 		} else {
-			ct.setBot(b,true);
+			ct.setBot(b,name,true);
 			c.msg(ct.getNPC().getFullName()+" is now using bot \""+name+"\".");
 		}
 	}

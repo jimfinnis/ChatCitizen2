@@ -241,10 +241,12 @@ public class ChatTrait extends Trait {
 	 * Change the bot. If reset is true, will cause the spawn count to be reset and the 
 	 * init clauses to run - typically done when changing the bot by a command.
 	 * @param b
+	 * @param name 
 	 * @param reset
 	 */
-	public void setBot(Bot b, boolean reset){
+	public void setBot(Bot b, String name, boolean reset){
 		try {
+			botName = name;
 			if(instance!=null)instance.remove();
 			instance = new BotInstance(b,npc.getFullName(),this);
 			// if this is a new bot it won't have any persisted vars. Use those in the bot instance,
@@ -289,7 +291,7 @@ public class ChatTrait extends Trait {
 		if(b==null)
 			throw new RuntimeException("bot \""+botName+"\" not found - is it in the config?");
 
-		setBot(b,false);
+		setBot(b,botName,false);
 
 		plugin.addChatter(npc);
 		Plugin.log(" Spawn run on "+npc.getFullName());

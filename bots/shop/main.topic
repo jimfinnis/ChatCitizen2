@@ -12,7 +12,7 @@
 # function to output what I buy
 
 :ibuy
-    ?@take isnone if
+    ?@thingsibuy isnone if
         ["I don't buy anything.", "I'm afraid I don't buy anything",
         "I buy nothing."] choose
     else    
@@ -24,7 +24,7 @@
         # side-effect of how lists work in Action Language, and is carried
         # over from my Angort language.
         
-        [] ?@take keys each loop
+        [] ?@thingsibuy keys each loop
             # this function is in root/mats.conf
             i getPluralMatName,
         endloop
@@ -36,20 +36,20 @@
 ;
 
 +test
-    [?@give,?@take,?@exchange,?buyingItem] "," join.
-    [?@give type,?@take type,?@exchange type,?buyingItem type] "," join.
+    [?@thingsisell,?@thingsibuy,?@exchange,?buyingItem] "," join.
+    [?@thingsisell type,?@thingsibuy type,?@exchange type,?buyingItem type] "," join.
 ;
 
 # function to output what I sell. See the ibuy function above for 
 # how it works.
 
 :isell
-    ?@give isnone if
+    ?@thingsisell isnone if
         ["I don't sell anything.", "Sorry, nothing is for sale.",
         "I sell nothing."] choose
     else    
         "I sell "
-        [] ?@give keys each loop
+        [] ?@thingsisell keys each loop
             i getPluralMatName,
         endloop listendwithand+
     then
@@ -69,8 +69,10 @@
     then
 ;
     
-+(what .* [sale sell]) isell;
-+(what .* buy) ibuy;
++(.* what .* you [sale sell]) isell;
++(.* what .* you buy) ibuy;
++(.* what .* i [sale sell]) ibuy;
++(.* what .* i buy) isell;
 
 # function to just print everything about me. It's used in
 # the catchall topic.
@@ -87,7 +89,7 @@
     
     # quick check for a null give map (i.e. we haven't set it,
     # and so don't sell anything)
-    ?@give isnone if
+    ?@thingsisell isnone if
         ["I don't sell that. In fact, I don't sell anything.",
         "I don't sell anything!"] choose.
     stop then
@@ -95,9 +97,9 @@
 
     ?m matname !mat
     ?mat isnone if "I dont know what ${?m addarticle} is." stop then
-    ?mat ?@give in if
+    ?mat ?@thingsisell in if
         "I sell one of those for "
-        ?mat ?@give get ?@exchange getMaterialNameAndNumber +
+        ?mat ?@thingsisell get ?@exchange getMaterialNameAndNumber +
         clean.
     else
         ?@dontsell choose.
@@ -111,12 +113,12 @@
 
     # quick check for a null give map (i.e. we haven't set it,
     # and so don't sell anything)
-    ?@give isnone if isell stop then
+    ?@thingsisell isnone if isell stop then
 
-    ?@give keys each loop 
+    ?@thingsisell keys each loop 
         i!i # because string embedding doesn't work with iterators
         "${?i getSingularMatName addarticle} "
-        "costs ${?i ?@give get ?@exchange getMaterialNameAndNumber}"+
+        "costs ${?i ?@thingsisell get ?@exchange getMaterialNameAndNumber}"+
         clean.
         " ".
     endloop
@@ -130,15 +132,23 @@
     
     # quick check for a null take map (i.e. we haven't set it,
     # and so don't buy anything)
-    ?@take isnone if ibuy stop then
+    ?@thingsibuy isnone if ibuy stop then
     
     []
-    ?@take keys each loop 
-        i ?@take get i getMaterialNameAndNumber,
+    ?@thingsibuy keys each loop 
+        i ?@thingsibuy get i getMaterialNameAndNumber,
     endloop
     listendwithor.
-    [" will each get you one ", 
-    "are each worth one "] choose . ?@exchange getSingularMatName.
+
+    ?@thingsibuy len 1 = if
+        [" will get you one ", 
+        "are worth one "]
+    else
+        [" will each get you one ", 
+        "are each worth one "]
+    then
+    choose .
+    ?@exchange getSingularMatName.
     out clean
 ;
 
@@ -149,7 +159,7 @@
 :attemptsetbuy |m:price|
     hourscheck if stop then
     
-    ?@give isnone if isell stop then
+    ?@thingsisell isnone if isell stop then
         
     # first turn the string we got into a subcategory of ~material
     # (which we know it must be, as it's in ~material)
@@ -157,7 +167,7 @@
 
     # then get the price, and check we actually sell these.
         
-    ?m ?@give get !price
+    ?m ?@thingsisell get !price
     ?price isnone if
         ?@dontsell choose.
     else
@@ -176,14 +186,16 @@
         +[something anything] "Please tell me what!" holdnext;
         +$c=~material $c attemptsetbuy;
         +(what .+) prices;
-        +(.*) ?@dontsell choose;
+        +(.* buy $c=~material) $c attemptsetbuy;
+        +(.* you .* buy) ibuy;
+        +(.*) ?@dontsell choose ;
     } next
 ;
 
 # patterns for setting what to buy.
 
 +(.* buy $c=~material) $c attemptsetbuy;
-+(.* buy .+) ?@dontsell choose.;
++(.* buy .+) "That's not a thing I know about.". ;
 +(.* buy) "Yes, we've established that. But what?". buywhat;
     
 
