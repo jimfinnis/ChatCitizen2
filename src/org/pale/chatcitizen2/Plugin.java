@@ -34,6 +34,7 @@ import org.pale.chatcitizen2.plugininterfaces.Sentinel;
 import org.pale.simplechat.Bot;
 import org.pale.simplechat.BotConfigException;
 import org.pale.simplechat.Conversation;
+import org.pale.simplechat.Logger;
 import org.pale.simplechat.ParserError;
 import org.pale.simplechat.actions.ActionException;
 import org.pale.simplechat.actions.InstructionCompiler;
@@ -135,6 +136,7 @@ public class Plugin extends JavaPlugin {
 	}
 
 	public void loadBots(){
+		Logger.setLog(Logger.ALL);
 		FileConfiguration c = this.getConfig();
 		final ConfigurationSection bots = c.getConfigurationSection("bots");
 		if(bots==null){
@@ -165,6 +167,7 @@ public class Plugin extends JavaPlugin {
 			}
 		}
 		log("Bots all loaded.");
+		Logger.setLog(0);
 	}
 
 	public static void sendCmdMessage(CommandSender s,String msg){

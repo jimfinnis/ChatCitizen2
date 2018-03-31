@@ -157,6 +157,7 @@
 # (see mats.conf in root)
 
 :attemptsetbuy |m:price|
+#    "ASB" dp
     hourscheck if stop then
     
     ?@thingsisell isnone if isell stop then
@@ -164,7 +165,6 @@
     # first turn the string we got into a subcategory of ~material
     # (which we know it must be, as it's in ~material)
     ?m ~material subcat !m
-
     # then get the price, and check we actually sell these.
         
     ?m ?@thingsisell get !price
@@ -194,9 +194,9 @@
 
 # patterns for setting what to buy.
 
-+(.* buy $c=~material) $c attemptsetbuy;
-+(.* buy .+) "That's not a thing I know about.". ;
-+(.* buy) "Yes, we've established that. But what?". buywhat;
++/b1 (.* buy $c=~material) $c attemptsetbuy;
++/b2 (.* buy .+) "That's not a thing I know about.". ;
++/b3 (.* buy) "Yes, we've established that. But what?". buywhat;
     
 
 +(how much .* give .*) values;
