@@ -76,13 +76,11 @@
             :["What a lovely afternoon","What a beautiful afternoon","Another lovely day","It's a nice day out there","Nice, isn't it?"]; choose
         then
     case
-    ?t `evening = if
         rain if
             :["Wish I were in bed","What a grim night","it's nasty out this evening","What a grim night","Good to be in the warm"];  choose
         else
             :["What a pleasant evening","What a beautiful evening","Ah, the smell of the evening","It's a nice, quiet night","Nice, isn't it?"]; choose
         then
-    case
     otherwise
 ;
 
