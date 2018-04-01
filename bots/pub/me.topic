@@ -1,0 +1,26 @@
+:howareyouresponse
+    {
+        +&good
+        "Great! How about a drink?". wantsdrink;
+        +&bad
+        ["Sorry to hear that","That's a shame","Oh, hell","Oh dear"]
+        choose clean.;
+    } next
+;
+
+:howareyou |:l|
+    ["I'm fine", "I'm OK", "I'm good"] !l
+    random
+        ?l choose clean.
+    randcase
+        ?l choose ", " + ["how about you","what about you","and you"] choose "?" + + clean.
+        howareyouresponse
+    endrandom
+;
+
++(~greet .*)
+    greet clean.
+    " How are you?". howareyouresponse;
+
++(.* how .* you .*)
+    howareyou;

@@ -5,7 +5,7 @@
     `todstring mctime ?@hours in if
         0
     else
-        ?@notopen choose. 1
+        ^notopen. 1
     then
 ;
 
@@ -102,7 +102,7 @@
         ?mat ?@thingsisell get ?@exchange getMaterialNameAndNumber +
         clean.
     else
-        ?@dontsell choose.
+        ^dontsell.
     then
 ;
 
@@ -169,7 +169,7 @@
         
     ?m ?@thingsisell get !price
     ?price isnone if
-        ?@dontsell choose.
+        ^dontsell .
     else
         "You are buying ".
         ?m !buyingItem # set the conversation variable
@@ -188,7 +188,7 @@
         +(what .+) prices;
         +(.* buy $c=~material) $c attemptsetbuy;
         +(.* you .* buy) ibuy;
-        +(.*) ?@dontsell choose ;
+        +(.*) ^dontsell;
     } next
 ;
 

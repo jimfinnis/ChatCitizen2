@@ -1,0 +1,8 @@
++(.* [&good agree] .*)    
+    ^agree clean;
+    
++(.* [&bad disagree] .*)
+    ^disagree clean;
+    
++.* ^beatsme clean;
+

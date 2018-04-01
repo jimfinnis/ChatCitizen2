@@ -68,7 +68,7 @@
 
 +(.* [nor neither] am I ?a ~male .*)
     `female setgender;
-+/qqqq (I am .* ~not .* ~male .*)
++(I am .* ~not .* ~male .*)
     `female setgender;
 +(I am .* ~male .*)
     `male setgender;

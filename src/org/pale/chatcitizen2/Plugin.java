@@ -18,8 +18,10 @@ import net.citizensnpcs.api.npc.NPC;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -36,6 +38,7 @@ import org.pale.simplechat.BotConfigException;
 import org.pale.simplechat.Conversation;
 import org.pale.simplechat.Logger;
 import org.pale.simplechat.ParserError;
+import org.pale.simplechat.Tokenizer;
 import org.pale.simplechat.actions.ActionException;
 import org.pale.simplechat.actions.InstructionCompiler;
 import org.pale.simplechat.actions.InstructionStream;
@@ -163,7 +166,13 @@ public class Plugin extends JavaPlugin {
 			try {
 				this.bots.put(name,Bot.loadBot(name));
 			} catch (BotConfigException e) {
-				log("cannot load bot "+name+", error: "+e.getMessage());
+				
+				// this is a Cunning Ruse to let us use a console colour in our log messages.
+				ConsoleCommandSender console = getServer().getConsoleSender();
+
+				console.sendMessage(ChatColor.RED+"##################################################################################");
+				console.sendMessage(ChatColor.RED+"cannot load bot "+name+", error: "+e.getMessage());
+				console.sendMessage(ChatColor.RED+"##################################################################################");
 			}
 		}
 		log("Bots all loaded.");
@@ -261,7 +270,7 @@ public class Plugin extends JavaPlugin {
 			try {
 				b.reload();
 			} catch (BotConfigException e) {
-				c.msg("Bot reload failed: "+e.getMessage());
+				c.msg(ChatColor.RED+"Bot reload failed: "+e.getMessage());
 			}
 		}	
 		c.msg("Reload OK.");
@@ -277,7 +286,7 @@ public class Plugin extends JavaPlugin {
 			try {
 				b.reload();
 			} catch (BotConfigException e) {
-				c.msg("Bot reload failed: "+e.getMessage());
+				c.msg(ChatColor.RED+"Bot reload failed: "+e.getMessage());
 			}
 		}
 		c.msg("Reload OK.");
@@ -390,6 +399,12 @@ public class Plugin extends JavaPlugin {
 			c.msg(ChatColor.RED+e.getMessage());
 		}
 	}
+	
+	@Cmd(desc="set logging bits",argc=1,usage="<logging bitmask>")
+	public void setlog(CallInfo c){
+		int flags = Integer.parseInt(c.getArgs()[0]);
+		Logger.setLog(flags);
+	}
 
 	@Cmd(desc="show help for a command or list commands",argc=-1,usage="[<command name>]")
 	public void help(CallInfo c){
@@ -425,13 +440,13 @@ public class Plugin extends JavaPlugin {
 		
 		Value v;
 		switch(args[1].charAt(0)){
-		case 'i':v = new IntValue(Integer.parseInt(args[2]));break;
-		case 'd':v = new DoubleValue(Integer.parseInt(args[2]));break;
-		case 's':v = new StringValue(args[2]);break;
+		case 'i':v = new IntValue(Integer.parseInt(args[2].trim()));break;
+		case 'd':v = new DoubleValue(Integer.parseInt(args[2].trim()));break;
+		case 's':v = new StringValue(args[2].trim());break;
 		case 'v':
 			// weird one, this. We compile the rest of the arguments as action lang and get what's on the stack.
 			Conversation conv = ct.instance.getConversation(c.getPlayer());
-			StreamTokenizer tok = new StreamTokenizer(new StringReader(args[2]));
+			Tokenizer tok = new Tokenizer("command arg",new StringReader(args[2]));
 			try {
 				InstructionStream str = new InstructionStream(ct.instance.bot, tok);
 				str.run(conv, true);

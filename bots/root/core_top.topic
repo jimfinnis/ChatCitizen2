@@ -3,4 +3,4 @@
 
 +(debug on) 1 debug "Debugging on.";
 +(debug off) 0 debug "Debugging off.";
-
++(setlog $c=.) $c int setlog "Logging set to " $c +;

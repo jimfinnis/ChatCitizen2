@@ -1,0 +1,155 @@
+:addDrink
+    "ADDING DRINK" dp
+    # make list if none exists
+    ?drinktimes isnone if [] !drinktimes then
+    # add the current time to end of the list
+    now ?drinktimes push
+    # if list is long, remove first item (oldest time)
+    ?drinktimes len 5 > if
+        ?drinktimes shift drop
+    then
+; 
+
+:howDrunk
+    ?drinktimes isnone if
+        0 "No drinks in list" dp
+    else
+        "Debug: drinktimes=" ?drinktimes+ " len="+ ?drinktimes len + dp
+        0 double # accumulator
+        ?drinktimes each loop
+           # add halflife decay of this drink
+           0.5  now i - ?@HalfLife /  pow +
+        endloop
+    then
+;
+
+
+:isdrunk howDrunk 3.5 > ;
+
+:wantsdrink
+    {
+        +(.* ~not .* ~drink .*)
+            ?isdrunk if
+                "Good thing too.". ^yourehammered.
+            else
+                "Well, what would you like, then?". holdnext
+            then;
+        +(.* $c=~drink .*)
+            ?isdrunk if ^refusedrink. else 
+                "One ${$c} coming right up.".
+                addDrink
+                {
+                    +&thanks ^yourewelcome;
+                } next
+            then;
+    } next;
+    
+
+:GREET
+    greet. ".".
+    isdrunk not if
+        ^likedrink. "?".
+        {
+            +&yes ^whatwouldyoulike "?" + clean wantsdrink;
+            +&no ^nodrinkplease clean;
+        } next
+    else
+        ^yourehammered.
+    then    
+    out clean
+;       
+
+:weathersay
+    `todstring mctime !t
+    cases
+    ?t `morning = if
+        rain if
+            :["Bit grim out, isn't it?","What about that weather!","I wish the rain would stop","Bleak this norning.","Ugh, the weather"]; choose
+        else
+            :["What a lovely morning","What a beautiful morning","Another lovely day","It's a nice day out there","Nice, isn't it?"]; choose
+        then
+    case
+    ?t `afternoon = if
+        rain if
+            :["Bit grim out, isn't it?","What about that weather!","I wish the rain would stop","Bleak this afternoon.","Ugh, the weather"]; choose
+        else
+            :["What a lovely afternoon","What a beautiful afternoon","Another lovely day","It's a nice day out there","Nice, isn't it?"]; choose
+        then
+    case
+    ?t `evening = if
+        rain if
+            :["Wish I were in bed","What a grim night","it's nasty out this evening","What a grim night","Good to be in the warm"];  choose
+        else
+            :["What a pleasant evening","What a beautiful evening","Ah, the smell of the evening","It's a nice, quiet night","Nice, isn't it?"]; choose
+        then
+    case
+    otherwise
+;
+
+:RANDSAY |:t|
+    random
+        "Tum te tum"
+    randcase
+        "What a day"
+    randcase
+        weathersay
+    endrandom
+    clean
+;   
+
++test RANDSAY;
+
++(.* ~not .* $c=~drink .*)
+    ?isdrunk if
+        "Good thing too.". ^yourehammered.
+    else
+        "OK, you don't want a ${$c}. What do you want?".
+        wantsdrink
+    then
+;
+
+:listdrinks
+    ?isdrunk if
+        "Nothing for you. "
+        ^yourehammered+
+    else
+        "We have "
+        ?@DrinksList listendwithand + "." +
+        ["Any appeal to you?", "What would you like?", "Fancy any of those?"] choose +
+        wantsdrink
+    then
+    clean
+;
+ 
+
++/SNARK1([what which] .* got)
+    listdrinks;
++/SNARK2([what which] .* have)
+    listdrinks;
+   
++/SNARK3([what which] .* ~genericdrink .*)
+    listdrinks;
+
+
++(.* $c=~drink .*)
+    isdrunk if
+        ^refusedrink.
+    else
+        "One ${$c} coming right up.". addDrink
+        {
+            +&thanks ^yourewelcome;
+        } next
+    then;
+    
++(.* ~genericdrink .*)
+    isdrunk if
+        ^refusedrink.
+    else
+        ^whatwouldyoulike "?" + clean wantsdrink
+    then;
+   
++(?~greet who .* you .*)
+    "I'm ${?@botname}, "
+    :["the barkeep","your host","the innkeeper","manager of this establishment"]; choose +
+    clean
+;
