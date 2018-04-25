@@ -10,10 +10,11 @@ bots:
     root: "plugins/ChatCitizen/bots/root"
     serviceprovider: "plugins/ChatCitizen/bots/serviceprovider"
 
-    poet: "plugins/ChatCitizen/bots/root"
+    default: "plugins/ChatCitizen/bots/root"
     shop: "plugins/ChatCitizen/bots/shop"
     shop2: "plugins/ChatCitizen/bots/shop2"
     fuchsia: "plugins/ChatCitizen/bots/root"
     soldier: "plugins/ChatCitizen/bots/soldier"
     bookshop: "plugins/ChatCitizen/bots/bookshop"
+    gemshop: "plugins/ChatCitizen/bots/gemshop"
     pub: "plugins/ChatCitizen/bots/pub"

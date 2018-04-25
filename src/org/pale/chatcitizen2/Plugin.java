@@ -26,6 +26,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.Vector;
 import org.pale.chatcitizen2.Command.CallInfo;
 import org.pale.chatcitizen2.Command.Cmd;
 import org.pale.chatcitizen2.Command.Registry;
@@ -166,7 +167,7 @@ public class Plugin extends JavaPlugin {
 			try {
 				this.bots.put(name,Bot.loadBot(name));
 			} catch (BotConfigException e) {
-				
+
 				// this is a Cunning Ruse to let us use a console colour in our log messages.
 				ConsoleCommandSender console = getServer().getConsoleSender();
 
@@ -215,13 +216,23 @@ public class Plugin extends JavaPlugin {
 
 	public void handleMessage(Player player, String msg){
 		Location playerloc = player.getLocation();
+		Vector playerpos = playerloc.toVector();
+		Vector playerdir = playerloc.getDirection().normalize();
 		for(NPC npc: chatters){
 			Location npcl = npc.getEntity().getLocation();
-			if(isNear(playerloc,npcl,2)){ // chatters assume <2m and you're talking to them.
-				if(npc.hasTrait(ChatTrait.class)){
-					ChatTrait ct = npc.getTrait(ChatTrait.class);
-					ct.setPropertiesForSender(player);
-					ct.respondTo(player,msg);
+			Vector npcpos = npcl.toVector();
+			if(npc.hasTrait(ChatTrait.class)){
+				if(isNear(playerloc,npcl,2)){ // chatters assume <2m and you're talking to them.
+					Vector tonpc = npcpos.subtract(playerpos).normalize();
+					// dot prod of facing vector and vector to player
+					double dot = tonpc.dot(playerdir);
+					//log("Dot to "+npc.getName()+ " is "+Double.toString(dot));
+					// make sure we're roughly facing the NPC
+					if(dot>0.8){
+						ChatTrait ct = npc.getTrait(ChatTrait.class);
+						ct.setPropertiesForSender(player);
+						ct.respondTo(player,msg);
+					}
 				}
 			}
 		}
@@ -375,7 +386,7 @@ public class Plugin extends JavaPlugin {
 			c.msg(ct.getNPC().getFullName()+" is now using bot \""+name+"\".");
 		}
 	}
-	
+
 	@Cmd(desc="set a special parameter for an NPC",argc=2,usage="<param name> <value>",cz=true,permission="chatcitizen.set")
 	public void setparam(CallInfo c){
 		// this calls SETPARAM if it is defined, which should be a function with the picture (val param -- [string]).
@@ -399,7 +410,7 @@ public class Plugin extends JavaPlugin {
 			c.msg(ChatColor.RED+e.getMessage());
 		}
 	}
-	
+
 	@Cmd(desc="set logging bits",argc=1,usage="<logging bitmask>")
 	public void setlog(CallInfo c){
 		int flags = Integer.parseInt(c.getArgs()[0]);
@@ -414,7 +425,7 @@ public class Plugin extends JavaPlugin {
 			commandRegistry.showHelp(c,c.getArgs()[0]);
 		}
 	}
-	
+
 	@Cmd(desc="list all instance variables for the current NPC",cz=true)
 	public void liv(CallInfo c){
 		ChatTrait ct = c.getCitizen();
@@ -430,14 +441,14 @@ public class Plugin extends JavaPlugin {
 		if(args.length<3){
 			c.msg("need (at least) 3 args");return;
 		}
-		
+
 		StringBuilder sb = new StringBuilder();
 		for(int i=2;i<args.length;i++){
 			sb.append(args[i]);sb.append(" ");
 		}
 		args[2] = sb.toString();
-		
-		
+
+
 		Value v;
 		switch(args[1].charAt(0)){
 		case 'i':v = new IntValue(Integer.parseInt(args[2].trim()));break;
