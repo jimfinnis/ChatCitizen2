@@ -17,4 +17,6 @@ bots:
     soldier: "plugins/ChatCitizen/bots/soldier"
     bookshop: "plugins/ChatCitizen/bots/bookshop"
     gemshop: "plugins/ChatCitizen/bots/gemshop"
+    monstershop: "plugins/ChatCitizen/bots/monstershop"
+    butcher: "plugins/ChatCitizen/bots/butcher"
     pub: "plugins/ChatCitizen/bots/pub"

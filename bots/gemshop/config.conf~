@@ -19,6 +19,11 @@ global
     ] !@thingsisell
 
     # buying
+    [%
+        ~diamond 48,
+        ~emerald 32,
+        ~obsidian 16
+    ]
     none !@thingsibuy
 
 ;

@@ -1,4 +1,4 @@
-# matname,alternative singulars (:) separated,alternative plurals
+# matname,alternative singulars (:) separated,alternative plurals (:) separated
 #
 AIR
 STONE,block of stone,blocks of stone
@@ -234,8 +234,8 @@ GOLD_CHESTPLATE
 GOLD_LEGGINGS
 GOLD_BOOTS
 FLINT
-PORK,pork chop
-GRILLED_PORK,grilled pork chop
+PORK,pork chop,porkchop
+GRILLED_PORK,grilled pork chop:grilled porkchop:cooked porkchop:cooked pork chop,grilled pork chops:grilled porkchops:cooked porkchops:cooked pork chops
 PAINTING
 GOLDEN_APPLE
 SIGN
@@ -264,8 +264,8 @@ COMPASS
 FISHING_ROD
 WATCH
 GLOWSTONE_DUST,bit of glowstone dust,bits of glowstone dust
-RAW_FISH
-COOKED_FISH
+RAW_FISH,raw fish,raw fish
+COOKED_FISH,cooked fish,cooked fish
 INK_SACK
 BONE
 SUGAR,lump of sugar,lumps of sugar
@@ -278,10 +278,10 @@ SHEARS,pair of shears,pairs of shears
 MELON
 PUMPKIN_SEEDS,pumpkin seed
 MELON_SEEDS,melon seed
-RAW_BEEF,steak
-COOKED_BEEF,cooked steak
+RAW_BEEF,steak,steaks
+COOKED_BEEF,cooked steak,cooked steaks
 RAW_CHICKEN,chicken
-COOKED_CHICKEN,cooked chicken
+COOKED_CHICKEN,cooked chicken,cooked chicken
 ROTTEN_FLESH,lump of rotten flesh,lumps of rotten flesh
 ENDER_PEARL
 BLAZE_ROD
