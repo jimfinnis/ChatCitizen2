@@ -103,10 +103,13 @@ public class ChatTrait extends Trait {
 	
 	List<Player> getNearPlayers(double d){
 		List<Player> r = new ArrayList<Player>();
-		// note the 1 - we have to be roughly on the same level.
+		// note the 1 - we have to be roughly on the same level, AND we have to be able to see them.
+		// Actually, we check to see if they can see *us*.
 		for(Entity e: npc.getEntity().getNearbyEntities(d,1,d)){
 			if(e instanceof Player){
-				r.add((Player)e);
+				Player p = (Player)e;
+				if(p.hasLineOfSight(npc.getEntity()))
+					r.add((Player)e);
 			}
 		}
 		return r;
