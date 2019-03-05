@@ -22,7 +22,8 @@ You'll also need a fair few plugins installed.
 - Sentinel
 
 Make sure the POM is up to date with the versions for these,
-and that the paths in there are right.
+and that the paths in there are right. Then you can just run `mvn`
+(assuming you have maven installed!)
 
 == Usage
 I'll deal with this later, but it's mostly the same as ChatCitizens.

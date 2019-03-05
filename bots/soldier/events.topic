@@ -40,8 +40,5 @@
 :pleasestop
     ["Ow!","Hey!","Ouch!","Stop that!","What was that for?"] choose;
 
-:RIGHTCLICK pleasestop;
-
-
 :ENTITYHITME pleasestop;
 :PLAYERHITME pleasestop;

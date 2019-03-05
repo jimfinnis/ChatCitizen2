@@ -102,6 +102,7 @@
     out clean
     {
         +(.* ~good .*) "The pay's rubbish, but I enjoy it.";
+        +(.* ~bad .*) "Oh, it's not all bad. Sometimes there are monsters.";
     } next
 ;   
 

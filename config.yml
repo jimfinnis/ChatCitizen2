@@ -20,3 +20,4 @@ bots:
     monstershop: "plugins/ChatCitizen/bots/monstershop"
     butcher: "plugins/ChatCitizen/bots/butcher"
     pub: "plugins/ChatCitizen/bots/pub"
+    poet: "plugins/ChatCitizen/bots/poet"

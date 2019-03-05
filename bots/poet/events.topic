@@ -1,0 +1,17 @@
+:RIGHTCLICK |:t|
+    ?itemheld `NOITEM = if
+        :["Hmm.","Ow,","what?","and?","well.","bloik","Aha!","grr"]; choose.
+    else
+        ?itemheld getSingularMatName !t 
+        "How " ^good + ", " + 20 maybe.
+        "a ".
+        ^hedge " " + 50 maybe.
+        ?t ~weapon iscat if ^weapondesc else ^boring then " " +.
+        
+        ?t.
+    then
+    out clean
+;
+
+
+
