@@ -1,0 +1,10 @@
+    
+:isell  "I don't sell anything!";
+:ibuy   "I don't buy anything!";
+
+    
++(.* what .* you [sale sell]) isell;
++(.* what .* you buy) ibuy;
++(.* what .* i [sale sell]) ibuy;
++(.* what .* i buy) isell;
+

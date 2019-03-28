@@ -1,0 +1,38 @@
+:RIGHTCLICK |:t|
+    ?itemheld "NOITEM" = if
+    
+        # we're holding nothing, that's cheeky!
+        "givestone" dp
+        givemestone.
+    else
+        "its a thing" dp
+        # we are holding something - is it something we buy?
+        ?itemheld ~stone iscat if
+            "dirt" dp
+            # it is! Try to take the appropriate number.
+            1 ?itemheld take !t
+            cases
+                ?t "UNKNOWN" = if "That's a very odd object.". case
+                ?t "NOITEM" = if "A handful of air...". case
+                ?t "WRONG" = if "The wrong item.". case
+                ?t "OK" = if
+                    # that worked, so give 1 exchange item.
+#                    ^thanks.
+                        1 ~smooth_brick give drop
+                    case
+                # in case the take returned something weird.
+                "I feel the need to say " . ?t . "." .
+                "Oooh, shivery.". otherwise
+        else
+            givemestone.
+        then
+    then
+    out clean      
+;
+
+
+:pleasestop
+    ["Ow!","Hey!","Ouch!","Stop that!","What was that for?"] choose;
+
+:ENTITYHITME pleasestop;
+:PLAYERHITME pleasestop;
