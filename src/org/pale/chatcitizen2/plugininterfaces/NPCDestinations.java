@@ -4,6 +4,8 @@ import net.citizensnpcs.api.npc.NPC;
 import net.livecar.nuttyworks.npc_destinations.citizens.NPCDestinationsTrait;
 import net.livecar.nuttyworks.npc_destinations.citizens.NPCDestinationsTrait.en_RequestedAction;
 
+import java.time.LocalDateTime;
+
 import org.pale.chatcitizen2.ExternalPluginInterface;
 import org.pale.chatcitizen2.Plugin;
 
@@ -39,8 +41,8 @@ public class NPCDestinations extends ExternalPluginInterface{
 				trait.lastResult="forced location (ChatCitizen)";
 				trait.setLocation = trait.NPCLocations.get(locnum);
 				trait.currentLocation = trait.setLocation;
-				trait.locationLockUntil = new java.util.Date(System.currentTimeMillis()+forTime);
-				trait.lastPositionChange = new java.util.Date();
+				trait.locationLockUntil = LocalDateTime.now().plusSeconds(forTime);
+				trait.lastPositionChange = LocalDateTime.now();
 				trait.setRequestedAction(en_RequestedAction.SET_LOCATION);
 				return true;
 			} else {

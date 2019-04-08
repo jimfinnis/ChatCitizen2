@@ -29,7 +29,7 @@
   <groupId>org.pale</groupId>
   <artifactId>chatcitizen</artifactId>
   <packaging>jar</packaging>
-  <version>2.0.0</version>
+  <version>2.0.1</version>
   <properties>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
@@ -53,37 +53,37 @@
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.12.1-R0.1-SNAPSHOT</version>
+      <version>1.13.2-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <!--Bukkit API-->
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>1.12.1-R0.1-SNAPSHOT</version>
+      <version>1.13.2-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <!--plugins we need to link against, in the server's plugins dir -->
     <dependency>
       <groupId>net.livecar.nuttyworks.npc_destinations</groupId>
       <artifactId>NPC_Destinations</artifactId>
-      <version>2_1_23</version>
+      <version>2_3_21</version>
       <scope>system</scope>
-      <systemPath>${server.plugindir}/NPC_Destinations-2_1_23.jar</systemPath>
+      <systemPath>${server.plugindir}/NPCDestinations-2_3_21.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>net.citizensnpcs</groupId>
       <artifactId>api</artifactId>
-      <version>2.0.22</version>
+      <version>2.0.24</version>
       <scope>system</scope>
       <systemPath>${server.plugindir}/Citizens.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>org.mcmonkey</groupId>
       <artifactId>sentinel</artifactId>
-      <version>1.4.5</version>
+      <version>1.8.5-b244</version>
       <scope>system</scope>
-      <systemPath>${server.plugindir}/sentinel-1.4.5.jar</systemPath>
+      <systemPath>${server.plugindir}/Sentinel-1.8.5-b244.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>org.pale</groupId>
