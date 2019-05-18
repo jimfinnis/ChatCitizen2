@@ -19,7 +19,7 @@
                 ?t "OK" = if
                     # that worked, so give 1 exchange item.
 #                    ^thanks.
-                        64 ~smooth_brick give drop
+                        64 ~stone_bricks give drop
                     case
                 # in case the take returned something weird.
                 "I feel the need to say " . ?t . "." .

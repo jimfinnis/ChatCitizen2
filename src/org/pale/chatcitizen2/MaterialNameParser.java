@@ -30,6 +30,7 @@ public class MaterialNameParser {
 				Plugin.log("Didn't work, trying "+itemName);
 				return Material.valueOf(itemName);
 			} catch(IllegalArgumentException e2) {
+				Plugin.log("Didn't work either, returning null: "+itemName);
 				return null;
 			}
 		}

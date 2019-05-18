@@ -8,11 +8,13 @@
 "_and_" regex$compile !AndWord
 "sh$" regex$compile !EndSh
 "ch$" regex$compile !EndCh
+"s$" regex$compile !EndS
 
 "_" regex$compile !Underscore
 
 :pluralize |s:| 
     cases
+        ?s ?EndS regex$match len 1>= if ?s case
         "_and_" ?s in if ?s "s_and_" ?AndWord regex$repl case
         ?s ?EndSh regex$match len 1>= if ?s "es"+ case
         ?s ?EndCh regex$match len 1>= if ?s "es"+ case
@@ -59,7 +61,7 @@
                 i lowercase !m
                 ?m ?MatNames push
                 ?m ?m ?Singulars addtohash
-                ?m "s" + ?m ?Plurals addtohash
+                ?m pluralize ?m ?Plurals addtohash
             then
         then
     }

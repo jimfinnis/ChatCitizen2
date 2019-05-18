@@ -76,7 +76,7 @@
       <artifactId>api</artifactId>
       <version>2.0.24</version>
       <scope>system</scope>
-      <systemPath>${server.plugindir}/Citizens.jar</systemPath>
+      <systemPath>${server.plugindir}/Citizens-2.0.24-b1628.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>org.mcmonkey</groupId>
