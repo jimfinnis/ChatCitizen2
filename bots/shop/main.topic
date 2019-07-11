@@ -152,6 +152,25 @@
     out clean
 ;
 
+:showvalue |m:mat|
+    hourscheck if stop then
+    ?@thingsibuy isnone if
+        ["I don't buy that. In fact, I don't buy anything.",
+        "I don't buy anything!"] choose.
+    stop then
+    ?m matname !mat
+    ?mat isnone if "I dont know what ${?m addarticle} is." stop then
+    ?mat ?@thingsibuy in if
+        ?mat ?@thingsibuy get englishnum
+        " of those will get you a " +
+        ?@exchange getSingularMatName+
+        clean.
+    else
+        ^dontbuy.
+    then
+;   
+
+
 # try to set m as the item the user is buying, checking we
 # actually sell it. The variable m holds a material category
 # (see mats.conf in root)
@@ -205,6 +224,8 @@
 +(cost ?of ?[a an] $n=.*) $n showcost;
 +(how much is ?[a an] $n=.*) $n showcost;
 +(what does ?[a an] $n=.* cost) $n showcost;
++(how much for ?[a an] $n=.*) $n showvalue;
++(?what ?is ?the value ?of ?[a an] $n=.*) $n showvalue;
 +(how much .*) prices;
 +(?what ?are ?your prices) prices;
 +(?what ?are ?your values) values;

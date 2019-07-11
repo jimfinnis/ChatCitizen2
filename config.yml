@@ -22,3 +22,4 @@ bots:
     pub: "plugins/ChatCitizen/bots/pub"
     poet: "plugins/ChatCitizen/bots/poet"
     brickmaker: "plugins/ChatCitizen/bots/brickmaker"
+    commodshop: "plugins/ChatCitizen/bots/commodshop"

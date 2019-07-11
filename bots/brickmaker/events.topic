@@ -8,7 +8,6 @@
         "its a thing" dp
         # we are holding something - is it something we buy?
         ?itemheld ~stone iscat if
-            "dirt" dp
             # it is! Try to take the appropriate number.
             64 ?itemheld take !t
             cases
@@ -18,7 +17,7 @@
                 ?t "NOTENOUGH" = if ^notenough. case
                 ?t "OK" = if
                     # that worked, so give 1 exchange item.
-#                    ^thanks.
+                    ^thanks.
                         64 ~stone_bricks give drop
                     case
                 # in case the take returned something weird.
@@ -28,7 +27,7 @@
             givemestone.
         then
     then
-    out clean      
+    out clean
 ;
 
 
