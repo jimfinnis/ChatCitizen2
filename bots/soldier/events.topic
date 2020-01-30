@@ -12,28 +12,49 @@
     ?nogreet hasnext or if
         none
     else
-        "todstring" mctime !t
-        ?t ["morning","afternoon","evening"] in if
-            ["Good", ?t, honor] " " join. "!".
+        sentinel_timeSinceAttack 100 < if
+            # in a fite!
+            ["Argh!",
+                "Eek!",
+                "",
+                "Sorry," honor +  "," + !t?t,
+                 ?t
+            ] choose
+            ["I'm in a bit of bother",
+            "it's all a bit scary right now",
+            "I'm in the middle of something",
+            "I'll just sort this out",
+            "this is all a bit harsh",
+            "things are bit much right now",
+            "I could do with a hand",
+            "could you possibly give me a hand?"] choose +
+            .
         else
-            # it's nighttime.
-        
-            3 rand if
-                "Good evening,".
+            # ordinary greeting
+            
+            "todstring" mctime !t
+            ?t ["morning","afternoon","evening"] in if
+                ["Good", ?t, honor] " " join. "!".
             else
-                "Hello,".
-            then
-            honor. ".".
-            4 rand not if
-                ["Shouldn't you be in bed?",
-                "The darkness weighs heavy.",
-                "It's a cold night.",
-                "It's dark out there."
-                ] choose.
+                # it's nighttime.
+        
+                3 rand if
+                    "Good evening,".
+                else
+                    "Hello,".
+                then
+                honor. ".".
+                4 rand not if
+                    ["Shouldn't you be in bed?",
+                    "The darkness weighs heavy.",
+                    "It's a cold night.",
+                    "It's dark out there."
+                    ] choose.
+                then
             then
         then
-        out clean clearout
     then
+    out clean clearout
 ;
 
 
@@ -42,3 +63,5 @@
 
 :ENTITYHITME pleasestop;
 :PLAYERHITME pleasestop;
+
+:RIGHTCLICK GREETSAY;

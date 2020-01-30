@@ -49,8 +49,8 @@
 
 +(?(give ?me ?a) report .*) report;
 +(how .+) report;
-+(what .* status) report;
-+hello report;
++(.* status) report;
++[hello hi (good .*)] report;
 
 
 

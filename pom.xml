@@ -37,7 +37,7 @@
     <!-- change these bits. -->
     <server.dir>/home/white/mc/server</server.dir>
     <server.plugindir>${server.dir}/plugins</server.plugindir>
-    <simplechat.bindir>/home/white/git/SimpleChat/bin</simplechat.bindir>  
+    <simplechat.bindir>/home/white/git/SimpleChat/target/classes</simplechat.bindir>  
   </properties>
   
   
@@ -53,38 +53,39 @@
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.13.2-R0.1-SNAPSHOT</version>
+      <version>1.14.4-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <!--Bukkit API-->
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>1.13.2-R0.1-SNAPSHOT</version>
+      <version>1.14.4-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <!--plugins we need to link against, in the server's plugins dir -->
     <dependency>
       <groupId>net.livecar.nuttyworks.npc_destinations</groupId>
       <artifactId>NPC_Destinations</artifactId>
-      <version>2_3_21</version>
+      <version>2_3_45</version>
       <scope>system</scope>
-      <systemPath>${server.plugindir}/NPCDestinations-2_3_21.jar</systemPath>
+      <systemPath>${server.plugindir}/NPCDestinations-2_3_45.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>net.citizensnpcs</groupId>
       <artifactId>api</artifactId>
-      <version>2.0.24</version>
+      <version>2.0.25</version>
       <scope>system</scope>
-      <systemPath>${server.plugindir}/Citizens-2.0.24-b1628.jar</systemPath>
+      <systemPath>${server.plugindir}/Citizens-2.0.25-b1738.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>org.mcmonkey</groupId>
       <artifactId>sentinel</artifactId>
-      <version>1.8.5-b244</version>
+      <version>1.9.2-b244</version>
       <scope>system</scope>
-      <systemPath>${server.plugindir}/Sentinel-1.8.5-b244.jar</systemPath>
+      <systemPath>${server.plugindir}/Sentinel-1.9.2-b261.jar</systemPath>
     </dependency>
+    <!--
     <dependency>
       <groupId>org.pale</groupId>
       <artifactId>simplechat</artifactId>
@@ -92,6 +93,7 @@
       <scope>system</scope>
       <systemPath>${server.dir}/simplechat-0.1.0.jar</systemPath>
     </dependency>
+    -->
     <dependency>
       <groupId>joda-time</groupId>
       <artifactId>joda-time</artifactId>
@@ -107,6 +109,7 @@
         <directory>.</directory>
         <includes>
           <include>plugin.yml</include>
+          <include>config.yml</include>
         </includes>
       </resource>
       <resource>
