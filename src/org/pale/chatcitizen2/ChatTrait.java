@@ -313,6 +313,7 @@ public class ChatTrait extends Trait {
 		List<Player> q = getNearPlayers(audibleDistance);
 		if(q.size()>0){
 			String msg = instance.handle(pattern, inResponseTo);
+			// if a zero length string is returned, nothing happens.
 			if(msg.trim().length()!=0){
 				String s = ChatColor.AQUA+"["+npc.getFullName()+" -> "+toName+"] "+ChatColor.WHITE+msg;
 				for(Player p: q){

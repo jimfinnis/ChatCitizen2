@@ -6,7 +6,7 @@ Jim Finnis <jim.finnis@gmail.com>
 
 This is a chatbot plugin for Bukkit Minecraft based on the 
 http://github.com/jimfinnis/SimpleChat/[SimpleChat] engine
-I'm working on. It will replace the original
+I'm working on. It replaces the original
 http://github.com/jimfinnis/ChatCitizens/[ChatCitizens] plugin,
 which used AIML.
 
@@ -26,10 +26,89 @@ and that the paths in there are right. Then you can just run `mvn`
 (assuming you have maven installed!)
 
 == Usage
-I'll deal with this later, but it's mostly the same as ChatCitizens.
-The bot definition files are completely different, though: see
-http://github.com/jimfinnis/SimpleChat/[SimpleChat] for how they
-work.
+* Run the server once with the JAR installed to make the plugin directory.
+* Move the `bots` directory into the `plugins/ChatCitizen` directory - these are the robot definitions.
+* You should now be able to run the server and attach the trait. Note that the server will now take a little more time to boot - AIML files can be large and take a long time to load!
+
+=== Attaching the trait
+
+Do this as usual with `/trait chatcitizen` with an NPC selected.
+All NPCs will initially be assigned the default bot, but each will have
+a different context so shouldn't get confused.
+It's important to remember that multiple NPCs can share the same bot, making
+them respond the same way, but that each NPC has a different context for its bot.
+For example, you could have two bots `soldier` and `idiot`. Your guards could then
+all use the `soldier` bot, and your idiots could use the `idiot` bot. 
+
+You can change the bot used by an NPC by selecting the NPC and using `ccz
+setbot [botname]`. To find out which NPCs are using which bot, use `ccz
+info` to get info for a selected NPC, or `ccz bots` which will list all
+the bots and their NPCs.
+
+=== Talking
+Talk to the bot by standing near it and saying things in chat. There's
+currently no standard way of talking to a non-player in private messaging, and
+this seemed to be the best way to do it (any thoughts, anyone?) The bot will
+assume you are talking to it if you are within 5 meters horizontally (XZ
+plane) and 2 vertically (Y plane).
+
+=== Commands
+* `ccz help [commandname]` get help on a command - with no arguments, list the commands.
+* `ccz setbot [name]` will set the currently selected NPC to use the named bot (these are subdirectories of the `bots` directory). (Required permission `chatcitizen.set`.)
+* `ccz info` get info on the NPC's ChatCitizen parameters.
+* `ccz set [paramname] [value]` set a parameter (requires `chatcitizen.set`).
+* `ccz reloadall` reload all AIML and data files (requires `chatcitizen.reloadall`).
+* `ccz reload [botname]` reload the AIML and data files for a bot (requires `chatcitizen.reload`). Note that the name is that of the bot as given in config.yml, not the name of an NPC using that bot: if `ccz bots` says that NPC Steve, Graham and Betty are all using the "soldier" bot, doing `ccz reload soldier` will work and reset them all, but `ccz reload Betty` will give an error.
+* `ccz bots` list all bots and the NPCs which use them.
+* `ccz subbot [subbotname]` tells the currently selected NPC to use the given sub-bot (each bot can have a number of sub-bots, each of which has its own sets and a map, to allow variations within bots).
+
+=== Parameters used by ccz set
+Many of these require spontaneous speech to be enabled by adding RANDSAY and GREETSAY to the bot's categories. The default
+bot doesn't have these.
+* `saydist` how far the bot will look for someone to randomly talk to - if there's no-one nearby, it stays quiet.
+* `sayint` the time it will wait between random speech events.
+* `sayprob` the chance (%) that it will try to speak, once every 5 seconds after the interval has elapsed.
+* `greetdist` how close a player has to be before the bot will greet it.
+* `greetinterval` how long between greeting each player (i.e. how long the player has to go away for).
+* `greetprob` the probability the bot will greet an appearing player, or just ignore them.
+* `auddist` the distance the bot's speech can be heard over.
+
+
+== Adding bots
+Bots each have their own directory under `plugins/ChatCitizens/bots` in your plugins directory, so copy the ones you want.
+Feel free to just copy and modify all the files from `default`, of course. 
+* Add the new directory to `config.yml` in the plugin directory. This tells the server which bot name is associated with which data directory.
+* Once this has been done, restart the server. The plugin will show the files being loaded, and you can refer to this if there are parsing problems.
+* Then assign your bot to an NPC (after giving it the trait), and test it.
+
+The details of the language are in http://github.com/jimfinnis/SimpleChat/[SimpleChat],
+but there are some specific things about how it's used in this plugin, which I'll cover below.
+
+=== Outputting text
+
+The standard way to output text is with the dot-command `.` and the `out` command. The first adds things
+to the out buffer, the second stacks the contents of the out buffer. Typically, you'll build up a string 
+in the out buffer as part of the action and then stack it as the last thing you do (perhaps reformatting
+it a bit with `clean`). If you output an empty string it won't say anything.
+
+This is useful, because you can use the `json...` commands to say stuff in raw JSON, except it's not
+raw. You'll build it using Bukkit's chat component system:
+* `json (-- json)` will take a string and make a JSON chat string out of it
+* `+ (json string -- json)` will append a string item to this
+* `jsonbold (json -- json
+
+=== Spontaneous speech patterns
+Adding categories with certain special patterns will make the robot
+produce spontaneous speech. If the category is not present, the speech
+will not trigger.
+* **RANDSAY** is fired off at random
+* **GREETSAY** is fired off when a player moves close and hasn't been greeted for a while.
+* **ENTITYHITME** triggers when the bot is hit by a non-player
+* **PLAYERHITME** triggers when the bot is hit by player
+* **HITSOMETHING** triggers when the bot hits something (fun with Sentinel!) 
+* **RIGHTCLICK** triggers when the bot is right-clicked. See **Right Clicking** below.
+There are properties associated with some of these: see above.
+
 
 == Special functions.
 There are a few. For now, you can work them out from the `extensions` package.
