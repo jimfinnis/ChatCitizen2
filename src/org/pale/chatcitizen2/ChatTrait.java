@@ -270,6 +270,7 @@ public class ChatTrait extends Trait {
 				Plugin.log("    "+s);
 			}
 		} catch (BotConfigException e) {
+			e.printStackTrace();
 			Plugin.log("cannot configure bot "+b.getName());
 		}
 	}

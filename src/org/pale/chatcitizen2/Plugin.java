@@ -34,12 +34,7 @@ import org.pale.chatcitizen2.extensions.Core;
 import org.pale.chatcitizen2.extensions.NPCDest;
 import org.pale.chatcitizen2.plugininterfaces.NPCDestinations;
 import org.pale.chatcitizen2.plugininterfaces.Sentinel;
-import org.pale.simplechat.Bot;
-import org.pale.simplechat.BotConfigException;
-import org.pale.simplechat.Conversation;
-import org.pale.simplechat.Logger;
-import org.pale.simplechat.ParserError;
-import org.pale.simplechat.Tokenizer;
+import org.pale.simplechat.*;
 import org.pale.simplechat.actions.ActionException;
 import org.pale.simplechat.actions.InstructionCompiler;
 import org.pale.simplechat.actions.InstructionStream;
@@ -384,6 +379,17 @@ public class Plugin extends JavaPlugin {
 		} else {
 			ct.setBot(b,name,true);
 			c.msg(ct.getNPC().getFullName()+" is now using bot \""+name+"\".");
+		}
+	}
+
+	@Cmd(desc="reinitialize a bot (rerun its init clause)",argc=0,usage="",cz=true,permission="chatcitizen.set")
+	public void reinit(CallInfo c){
+		ChatTrait ct = c.getCitizen();
+		try {
+			ct.instance.runInits();
+		} catch (BotConfigException e) {
+			e.printStackTrace();
+			c.msg("Exception occurred while running inits: "+e.toString());
 		}
 	}
 
