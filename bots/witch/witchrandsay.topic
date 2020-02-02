@@ -1,0 +1,43 @@
+:endear
+    :["dearie","sweetheart","my lovely","petal","love","my pretty"]; choose 20 maybe.
+;
+
+:RANDSAY
+    random
+        :["Mwahahaha!","Heeheehee!"]; choose. endear
+    randcase
+        :["Hello","Wotcher","Greetings"]; choose. endear
+    randcase
+        `todstring mctime !t
+        cases
+        ?t `morning = if
+            rain if
+                :["Ohh, the weather this morning","Damned rain","It's bleak"];
+                choose. endear
+            else
+                :["What a fine morning","A fine day","Beautiful morning","A bright new day",
+                "Such weather","A lovely day"]; choose. endear
+            then
+        case
+        ?t `afternoon if
+            rain if
+                :["Ohh, the weather this afternoon","Damned rain","It's bleak","The day ends darkly"];
+                choose. endear
+            else
+                :["What a fine afternoon","A fine day","Beautiful afternoon","A bright day",
+                "Such weather","A lovely day"]; choose. endear
+            then
+        case
+            rain if
+                :["A stormy night","A dark and bleak night","A bleak night",
+                "Perhaps you should be in bed","What are you doing up?"]; choose. endear
+            else
+                :["A fine, soft night","It is dark","A lovely evening",
+                "Perhaps you should be in bed","What are you doing up?"]; choose. endear
+            then
+        otherwise
+    endrandom
+    out clean
+;
+
+:GREETSAY RANDSAY;
