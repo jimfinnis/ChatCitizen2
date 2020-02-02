@@ -24,3 +24,4 @@ bots:
     brickmaker: "plugins/ChatCitizen/bots/brickmaker"
     commodshop: "plugins/ChatCitizen/bots/commodshop"
     witch: "plugins/ChatCitizen/bots/witch"
+    luxshop: "plugins/ChatCitizen/bots/luxshop"

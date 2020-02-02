@@ -1,7 +1,6 @@
 :RANDSAY
-    "Foo".
 ;
 
 :GREETSAY
-    "Bar."
 ;
+
