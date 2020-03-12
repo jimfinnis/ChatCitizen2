@@ -65,6 +65,7 @@ plane) and 2 vertically (Y plane).
 === Parameters used by ccz set
 Many of these require spontaneous speech to be enabled by adding RANDSAY and GREETSAY to the bot's categories. The default
 bot doesn't have these.
+
 * `saydist` how far the bot will look for someone to randomly talk to - if there's no-one nearby, it stays quiet.
 * `sayint` the time it will wait between random speech events.
 * `sayprob` the chance (%) that it will try to speak, once every 5 seconds after the interval has elapsed.
@@ -77,6 +78,7 @@ bot doesn't have these.
 == Adding bots
 Bots each have their own directory under `plugins/ChatCitizens/bots` in your plugins directory, so copy the ones you want.
 Feel free to just copy and modify all the files from `default`, of course. 
+
 * Add the new directory to `config.yml` in the plugin directory. This tells the server which bot name is associated with which data directory.
 * Once this has been done, restart the server. The plugin will show the files being loaded, and you can refer to this if there are parsing problems.
 * Then assign your bot to an NPC (after giving it the trait), and test it.
@@ -93,6 +95,7 @@ it a bit with `clean`). If you output an empty string it won't say anything.
 
 This is useful, because you can use the `json...` commands to say stuff in raw JSON, except it's not
 raw. You'll build it using Bukkit's chat component system:
+
 * `json (-- json)` will take a string and make a JSON chat string out of it
 * `+ (json string -- json)` will append a string item to this
 * `jsonbold (json -- json
@@ -101,12 +104,14 @@ raw. You'll build it using Bukkit's chat component system:
 Adding categories with certain special patterns will make the robot
 produce spontaneous speech. If the category is not present, the speech
 will not trigger.
+
 * **RANDSAY** is fired off at random
 * **GREETSAY** is fired off when a player moves close and hasn't been greeted for a while.
 * **ENTITYHITME** triggers when the bot is hit by a non-player
 * **PLAYERHITME** triggers when the bot is hit by player
 * **HITSOMETHING** triggers when the bot hits something (fun with Sentinel!) 
 * **RIGHTCLICK** triggers when the bot is right-clicked. See **Right Clicking** below.
+
 There are properties associated with some of these: see above.
 
 
