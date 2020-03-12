@@ -1,26 +1,29 @@
 
 :startdialog
-    `node1 [% `node1
-    [
-        ("Good day, my fine fellow"),
-        ["Hello", ("hello" dsay dstay)],
-        ["Fish", (`node2 dgo)]
-    ],
-
-    `node2
-    [
-        ("Fish, you say?"),
-        ["Tell me about fish", (`node3 dgo)],
-        ["Never mind.", ("OK then." dsay `node1 dgo)]
-    ],
+    `node1 
     
-    `node3
-    [
-        ("Fish are awesome! They flap and they flap and they do all those wonderful things that fish do! What kind do you like?"),
-        ["Salmon", ("Yeah, they're ok." dsay dstay)],
-        ["Tuna", ("Big fucking things! Tasty, too!" dsay dstay)],
-        ["Never mind.", ("OK then." dsay `node1 dgo)]
-    ]
+    [%  
+        `node1
+        [
+            ("Good day, my fine fellow"),
+            ["Hello", ("hello" dsay dstay)],
+            ["Fish", (`node2 dgo)]
+        ],
+
+        `node2
+        [
+            ("Fish, you say?"),
+            ["Tell me about fish", (`node3 dgo)],
+            ["Never mind.", ("OK then." dsay `node1 dgo)]
+        ],
+    
+        `node3
+        [
+            ("Fish are awesome! They flap and they flap and they do all those wonderful things that fish do! What kind do you like?"),
+            ["Salmon", ("Yeah, they're ok." dsay dstay)],
+            ["Tuna", ("Big fucking things! Tasty, too!" dsay dstay)],
+            ["Never mind.", ("OK then." dsay `node1 dgo)]
+        ]
     ] dstart
 ;
 
