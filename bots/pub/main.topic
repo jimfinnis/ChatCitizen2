@@ -136,7 +136,7 @@
         {
             +&yes "Yup. Drink?" drinkquestion;
             +&no "At least someone's happy. Drink?" drinkquestion;
-        }
+        } next
     endrandom
     clean
 ;   

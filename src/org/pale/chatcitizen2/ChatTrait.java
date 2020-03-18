@@ -1,5 +1,6 @@
 package org.pale.chatcitizen2;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -80,7 +81,7 @@ public class ChatTrait extends Trait {
 	 * Time at which we last saw a player, given their nick. Yes, you
 	 * can disguise yourself by changing nick.
 	 */
-	Map<String, LocalDate> playerLastSawTime = new HashMap<String, LocalDate>();
+	Map<String, Instant> playerLastSawTime = new HashMap<String, Instant>();
 
 	static class PersistedVars {
 		Map<String,Value> vars;
@@ -113,11 +114,12 @@ public class ChatTrait extends Trait {
 			if(e instanceof Player){
 				Player p = (Player)e;
 				if(p.hasLineOfSight(npc.getEntity())) {
-					r.add((Player) e);
+					r.add(p);
 					// now, I'm going to recycle this bit of code so we can store
 					// when we last saw a player! We only "see" a player when we try
 					// to talk, which is semantically odd, but it should work.
-					playerLastSawTime.put(p.getDisplayName().toLowerCase(),LocalDate.now());
+					playerLastSawTime.put(p.getName().toLowerCase(), Instant.now());
+					//Plugin.log("ADDING: "+p.getDisplayName());
 				}
 			}
 		}
@@ -130,10 +132,12 @@ public class ChatTrait extends Trait {
 	 * @return time difference in minutes, or -ve if never - max is 32000.
 	 */
 	public int getTimeSeen(String player){
+		//Plugin.log("LOOKING FOR : "+player);
 		if(playerLastSawTime.containsKey(player.toLowerCase())) {
-			long diffInMinutes = ChronoUnit.HOURS.between(playerLastSawTime.get(player),LocalDate.now());
-			if(diffInMinutes>32000)diffInMinutes=32000;
-			return (int)diffInMinutes;
+			long diffInSeconds = ChronoUnit.SECONDS.between(playerLastSawTime.get(player),Instant.now());
+			Plugin.log("GOT : "+diffInSeconds);
+			if(diffInSeconds>32000)diffInSeconds=32000;
+			return (int)diffInSeconds;
 		} else {
 			return -1; // i.e. in the future!
 		}
@@ -330,6 +334,23 @@ public class ChatTrait extends Trait {
 	public void onRemove() {
 	}
 
+	/**
+	 * say something out-of-band, directly.
+	 * @param toName
+	 * @param pattern
+	 */
+	public void utter(String toName,String msg){
+		List<Player> q = getNearPlayers(audibleDistance);
+		if(q.size()>0){
+			// if a zero length string is returned, nothing happens.
+			if(msg.trim().length()!=0){
+				String s = ChatColor.AQUA+"["+npc.getFullName()+" -> "+toName+"] "+ChatColor.WHITE+msg;
+				for(Player p: q){
+					p.sendMessage(s);
+				}
+			}
+		}
+	}
 	/**
 	 * Generate and send a response to a list of players. p (the player responded to) may be null.
 	 * 

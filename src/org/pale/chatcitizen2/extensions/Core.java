@@ -27,7 +27,7 @@ import org.pale.simplechat.values.StringValue;
 
 // extensions using core Bukkit.
 public class Core {
-	
+
 	// mctime (string -- timestring) get minecraft time. Input is digital,approx or todstring; anything else gives minecraft ticks. 
 	@Cmd public static void mctime(Conversation c) throws ActionException{
 		String type = c.popString();
@@ -50,7 +50,7 @@ public class Core {
 			else out = "night";
 		} else if(type.equals("approx")){
 			if (t > 22700 || t <= 450) {
-				out="dawn";	
+				out="dawn";
 			} else if (t > 4000 && t <= 8000) {
 				out="noon";
 			} else if (t > 11500 && t <= 13500) {
@@ -59,15 +59,15 @@ public class Core {
 				out="midnight";
 			} else if (t > 12000) {
 				out="night";
-			} else 
+			} else
 				out="day";
 		} else out = Long.toString(t);
 
 		c.push(new StringValue(out));
 	}
-	
+
 	static Instant startTime = Instant.now();
-	
+
 	// get REAL time in seconds since server boot (well, plugin start)
 	@Cmd public static void realnow(Conversation c) throws ActionException {
 		long t = ChronoUnit.SECONDS.between(startTime, Instant.now());
@@ -88,22 +88,22 @@ public class Core {
 			p.sendMessage(msg);
 		}
 	}
-	
+
 	// rain (-- boolean 1 or 0) is it raining/snowing 
 	@Cmd public static void rain(Conversation c) throws ActionException {
 		ChatTrait ct = (ChatTrait)c.instance.getData();
 		World w =ct.getNPC().getEntity().getWorld();
 		c.push(new IntValue(w.hasStorm() ? 1 : 0));
 	}
-    
-    // utter (string --) say something without using the input/response system, typically in response to a timer
-    @Cmd public static void utter(Conversation c) throws ActionException {
-        ChatTrait ct = (ChatTrait)c.instance.getData();
-        String msg = c.popString();
-        ct.utter("(nearby)",msg);
-    }
-	
-	
+
+	// utter (string --) say something without using the input/response system, typically in response to a timer
+	@Cmd public static void utter(Conversation c) throws ActionException {
+		ChatTrait ct = (ChatTrait)c.instance.getData();
+		String msg = c.popString();
+		ct.utter("(nearby)",msg);
+	}
+
+
 	// take (count itemname -- result) attempt to move items from the player's main hand, typically 
 	// from a RIGHTCLICK event.
 	// Results: NOTENOUGH (player doesn't have the number we requested)
@@ -118,29 +118,29 @@ public class Core {
 
 		String out;
 
-        Material m = MaterialNameParser.get(itemName);
-        if(m==null)
-        	out = "UNKNOWN";
-        else {
-        	Player p = (Player)c.source; // cast conversation source back to Player
-        	ItemStack st = p.getInventory().getItemInMainHand();
-    		if(st.getType() == Material.AIR) out = "NOITEM";
-    		else if(st.getType()!=m) out = "WRONG";
-    		else {
-    			int newamount = st.getAmount() - count;
-    			if(newamount<0)out = "NOTENOUGH";
-    			else {
-    				if(newamount==0)
-        				p.getInventory().setItemInMainHand(null);
-    				else 
-    					st.setAmount(newamount);
-        			out = "OK";
-    			}
-    		}
-        }
-        c.push(new StringValue(out));
+		Material m = MaterialNameParser.get(itemName);
+		if(m==null)
+			out = "UNKNOWN";
+		else {
+			Player p = (Player)c.source; // cast conversation source back to Player
+			ItemStack st = p.getInventory().getItemInMainHand();
+			if(st.getType() == Material.AIR) out = "NOITEM";
+			else if(st.getType()!=m) out = "WRONG";
+			else {
+				int newamount = st.getAmount() - count;
+				if(newamount<0)out = "NOTENOUGH";
+				else {
+					if(newamount==0)
+						p.getInventory().setItemInMainHand(null);
+					else
+						st.setAmount(newamount);
+					out = "OK";
+				}
+			}
+		}
+		c.push(new StringValue(out));
 	}
-	
+
 
 	// give (count itemname -- result) attempt to add items to the player. Does not remove items from the bot.
 	// If there's no room in the player's inventory, the items will be put on the ground.
@@ -153,35 +153,35 @@ public class Core {
 
 		String out;
 
-        Material m = MaterialNameParser.get(itemName);
-        if(m==null)
-        	out = "UNKNOWN";
-        else {
-        	Player p = (Player)c.source; // cast conversation source back to Player
-    		ItemStack st = new ItemStack(m,count);
-    		PlayerInventory inv = p.getInventory();
-    		HashMap<Integer,ItemStack> couldntStore = inv.addItem(st);
+		Material m = MaterialNameParser.get(itemName);
+		if(m==null)
+			out = "UNKNOWN";
+		else {
+			Player p = (Player)c.source; // cast conversation source back to Player
+			ItemStack st = new ItemStack(m,count);
+			PlayerInventory inv = p.getInventory();
+			HashMap<Integer,ItemStack> couldntStore = inv.addItem(st);
 
-    		// drop remaining items at the player
-    		for(ItemStack s: couldntStore.values()){
-    			p.getWorld().dropItem(p.getLocation(), s);
-    		}
-    		out = "OK";
-        }
-        c.push(new StringValue(out));
+			// drop remaining items at the player
+			for(ItemStack s: couldntStore.values()){
+				p.getWorld().dropItem(p.getLocation(), s);
+			}
+			out = "OK";
+		}
+		c.push(new StringValue(out));
 	}
-	
+
 	@Cmd public static void itemheld(Conversation c) throws ActionException {
-		
+
 	}
-	
+
 	// matname (string -- string) convert a material name to a standard Minecraft name (or none)
 	@Cmd public static void matname(Conversation c) throws ActionException {
-        String name = c.popString();
-        Material m = MaterialNameParser.get(name);
-        c.push(m==null ? NoneValue.instance : new StringValue(m.name().toLowerCase()));
+		String name = c.popString();
+		Material m = MaterialNameParser.get(name);
+		c.push(m==null ? NoneValue.instance : new StringValue(m.name().toLowerCase()));
 	}
-	
+
 	// addtimer (seconds name -- id) add a timer function, throws exception if no func exists
 	@Cmd public static void addtimer(Conversation c) throws ActionException {
 		String name = c.popString();
@@ -193,7 +193,7 @@ public class Core {
 		} else
 			throw new ActionException("Unknown function for timer : "+name);
 	}
-	
+
 	// removetimer (id --) remove a timer
 	@Cmd public static void removetimer(Conversation c) throws ActionException {
 		int id = c.pop().toInt();
