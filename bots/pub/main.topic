@@ -42,6 +42,7 @@
                     +&thanks ^yourewelcome;
                 } next
             then;
+        +(.* nothing .*) ^nodrinkwanted;
     } next;
     
 
@@ -84,13 +85,56 @@
     otherwise
 ;
 
+:drinkquestion {
+    +&yes "What kind?" wantsdrink;
+    +&no ^nodrinkwanted;
+    +(.* $c=~drink .*)
+            ?isdrunk if ^refusedrink. else 
+                "One ${$c} coming right up.".
+                addDrink
+                {
+                    +&thanks ^yourewelcome;
+                } next
+            then;
+    +(.* nothing .*) ^nodrinkwanted;
+    } next;
+
+
+:dishonored
+       {
+            +(indeed .*) "Dishonored. Great game. What'll you have?" wantsdrink;
+            +(.* [dishonored dishonored] .*) "Yep, great game. Drink?" drinkquestion;
+       } next
+ ;
+ 
++(.* test .*)
+    "Anyone else got an itchy nose?"
+    {
+        +&yes "Sorry!";
+        +&no "Just me then.";
+        +(.* now .*) "Heh. Works every time. Drink?" drinkquestion;
+    } next
+## below here is not part of the test
+    . out clean;
+    
+ 
 :RANDSAY |:t|
     random
-        "Tum te tum"
-    randcase
-        "What a day"
-    randcase
-        weathersay
+    "Tum te tum." randcase
+    "Phew." randcase
+    "<whistles tunelessly>" randcase
+    "<wipes the bar>" randcase
+    "What a day!" randcase
+    "So, looks like we're gathering for whisky and cigars tonight." dishonored
+        randcase
+    "Think you'll get your own squad after what happened last night?" dishonored
+        randcase
+    "Anyone else got an itchy nose?" randcase
+    "I could use a drink myself." randcase
+    "It's been a long week." randcase
+    "We're all in this together. This pub, I mean." randcase
+    "Drinks, anyone?" drinkquestion randcase
+    "Interesting times."
     endrandom
     clean
 ;   
