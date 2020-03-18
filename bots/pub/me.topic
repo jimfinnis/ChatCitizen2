@@ -22,5 +22,6 @@
     greet clean.
     " How are you?". howareyouresponse;
 
-+(.* how .* you .*)
-    howareyou;
++(.* how .* you .*) howareyou;
++(how .*) howareyou;
+

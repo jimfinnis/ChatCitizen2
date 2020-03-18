@@ -1,11 +1,9 @@
 package org.pale.chatcitizen2;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Random;
 
 import net.citizensnpcs.api.persistence.Persist;
 import net.citizensnpcs.api.persistence.PersistenceLoader;
@@ -78,6 +76,12 @@ public class ChatTrait extends Trait {
 	
 	@Persist public int spawnCount=0; //!< number of times spawned
 
+	/**
+	 * Time at which we last saw a player, given their nick. Yes, you
+	 * can disguise yourself by changing nick.
+	 */
+	Map<String, LocalDate> playerLastSawTime = new HashMap<String, LocalDate>();
+
 	static class PersistedVars {
 		Map<String,Value> vars;
 		PersistedVars(Map<String,Value> m) {
@@ -108,11 +112,31 @@ public class ChatTrait extends Trait {
 		for(Entity e: npc.getEntity().getNearbyEntities(d,1,d)){
 			if(e instanceof Player){
 				Player p = (Player)e;
-				if(p.hasLineOfSight(npc.getEntity()))
-					r.add((Player)e);
+				if(p.hasLineOfSight(npc.getEntity())) {
+					r.add((Player) e);
+					// now, I'm going to recycle this bit of code so we can store
+					// when we last saw a player! We only "see" a player when we try
+					// to talk, which is semantically odd, but it should work.
+					playerLastSawTime.put(p.getDisplayName().toLowerCase(),LocalDate.now());
+				}
 			}
 		}
 		return r;
+	}
+
+	/**
+	 * Get the last time I "saw" this player (i.e. they were in my line-of-sight and I said something to them)
+	 * @param player
+	 * @return time difference in minutes, or -ve if never - max is 32000.
+	 */
+	public int getTimeSeen(String player){
+		if(playerLastSawTime.containsKey(player.toLowerCase())) {
+			long diffInMinutes = ChronoUnit.HOURS.between(playerLastSawTime.get(player),LocalDate.now());
+			if(diffInMinutes>32000)diffInMinutes=32000;
+			return (int)diffInMinutes;
+		} else {
+			return -1; // i.e. in the future!
+		}
 	}
 	
 	
@@ -327,7 +351,7 @@ public class ChatTrait extends Trait {
 	/**
 	 * Perform a user function in the bot and say the result. NOTE THAT the func will ALWAYS run whether
 	 * there's anyone to hear it or not.
-	 * @param string funcname
+	 * @param fname funcname
 	 * @param source player who caused the event which triggered this (sets convvars in bot) OR NONE, in which case it's a general message and from the bot.
 	 */
 	private void respondToFunc(String fname, Player source) {
@@ -359,7 +383,7 @@ public class ChatTrait extends Trait {
 	 * Respond to a player saying something nearby. Alternatively used to just say something randomly,
 	 * in which case the player argument is to whom it should be said and the string is a special pattern (like RANDSAY).
 	 * @param player the player who spoke
-	 * @param msg what they said
+	 * @param input what they said
 	 */
 	public void respondTo(Player player,String input) {
 		setPropertiesForSender(player);

@@ -258,4 +258,11 @@ public class Core {
 			}
 		} else throw new ActionException("Not a JSON builder");
 	}
+
+	// lastseen (playername -- time) return how long ago (in mins) a player was seen, or -1.
+	@Cmd public static void lastseen(Conversation c) throws ActionException {
+		String name = c.popString();
+		ChatTrait ct = (ChatTrait)c.instance.getData();
+		c.push(new IntValue(ct.getTimeSeen(name)));
+	}
 }
