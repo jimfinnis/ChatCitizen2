@@ -95,6 +95,13 @@ public class Core {
 		World w =ct.getNPC().getEntity().getWorld();
 		c.push(new IntValue(w.hasStorm() ? 1 : 0));
 	}
+    
+    // utter (string --) say something without using the input/response system, typically in response to a timer
+    @Cmd public static void utter(Conversation c) throws ActionException {
+        ChatTrait ct = (ChatTrait)c.instance.getData();
+        String msg = c.popString();
+        ct.utter("(nearby)",msg);
+    }
 	
 	
 	// take (count itemname -- result) attempt to move items from the player's main hand, typically 
