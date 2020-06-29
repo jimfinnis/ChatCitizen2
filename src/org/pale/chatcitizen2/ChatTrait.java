@@ -112,28 +112,29 @@ public class ChatTrait extends Trait {
 		// Actually, we check to see if they can see *us*.
 		for(Entity e: npc.getEntity().getNearbyEntities(d,1,d)){
 			if(e instanceof Player){
-				Player p = (Player)e;
-				if(p.hasLineOfSight(npc.getEntity())) {
-					r.add(p);
-					// now, I'm going to recycle this bit of code so we can store
-					// when we last saw a player! We only "see" a player when we try
-					// to talk, which is semantically odd, but it should work.
-					playerLastSawTime.put(p.getName().toLowerCase(), Instant.now());
-					//Plugin.log("ADDING: "+p.getDisplayName());
-				}
+                            Player p = (Player)e;
+                            // now, I'm going to recycle this bit of code so we can store
+                            // when we last saw a player! We only "see" a player when we try
+                            // to talk, which is semantically odd, but it should work.
+                            playerLastSawTime.put(p.getName().toLowerCase(), Instant.now());
+                            if(p.hasLineOfSight(npc.getEntity())) {
+                                r.add(p);
+                                //Plugin.log("ADDING: "+p.getDisplayName());
+                            }
 			}
 		}
 		return r;
 	}
 
 	/**
-	 * Get the last time I "saw" this player (i.e. they were in my line-of-sight and I said something to them)
+	 * Get the last time I "saw" this player 
 	 * @param player
 	 * @return time difference in minutes, or -ve if never - max is 32000.
 	 */
 	public int getTimeSeen(String player){
-		//Plugin.log("LOOKING FOR : "+player);
-		if(playerLastSawTime.containsKey(player.toLowerCase())) {
+            //Plugin.log("LOOKING FOR : "+player);
+            player = player.toLowerCase();
+		if(playerLastSawTime.containsKey(player)) {
 			long diffInSeconds = ChronoUnit.SECONDS.between(playerLastSawTime.get(player),Instant.now());
 			Plugin.log("GOT : "+diffInSeconds);
 			if(diffInSeconds>32000)diffInSeconds=32000;

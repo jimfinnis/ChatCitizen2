@@ -29,7 +29,7 @@
   <groupId>org.pale</groupId>
   <artifactId>chatcitizen</artifactId>
   <packaging>jar</packaging>
-  <version>2.0.1</version>
+  <version>2.0.2</version>
   <properties>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
@@ -53,39 +53,33 @@
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.14.4-R0.1-SNAPSHOT</version>
-      <scope>provided</scope>
-    </dependency>
-    <!--Bukkit API-->
-    <dependency>
-      <groupId>org.bukkit</groupId>
-      <artifactId>bukkit</artifactId>
-      <version>1.14.4-R0.1-SNAPSHOT</version>
+      <version>1.16.1-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <!--plugins we need to link against, in the server's plugins dir -->
     <dependency>
       <groupId>net.livecar.nuttyworks.npc_destinations</groupId>
       <artifactId>NPC_Destinations</artifactId>
-      <version>2_3_45</version>
+      <version>2_3_56</version>
       <scope>system</scope>
-      <systemPath>${server.plugindir}/NPCDestinations-2_3_45.jar</systemPath>
+      <systemPath>${server.plugindir}/NPCDestinations-2_3_56.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>net.citizensnpcs</groupId>
       <artifactId>api</artifactId>
-      <version>2.0.25</version>
+      <version>2.0.27</version>
       <scope>system</scope>
-      <systemPath>${server.plugindir}/Citizens-2.0.25-b1738.jar</systemPath>
+      <systemPath>${server.plugindir}/Citizens-2.0.27-b2018.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>org.mcmonkey</groupId>
       <artifactId>sentinel</artifactId>
-      <version>1.9.2-b244</version>
+      <version>2.1.5-SNAPSHOT-b360</version>
       <scope>system</scope>
-      <systemPath>${server.plugindir}/Sentinel-1.9.2-b261.jar</systemPath>
+      <systemPath>${server.plugindir}/Sentinel-2.1.5-SNAPSHOT-b360.jar</systemPath>
     </dependency>
-    <!--
+    <!-- These are now pulled as individual classes, so that the end user
+        doesn't have to download it as an extra jar.
     <dependency>
       <groupId>org.pale</groupId>
       <artifactId>simplechat</artifactId>
