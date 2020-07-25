@@ -65,9 +65,14 @@
                     ?t "WRONG" = if "The wrong item.". case
                     ?t "NOTENOUGH" = if ^notenough. case
                     ?t "OK" = if
-                        # that worked, so give 1 exchange item.
+                        # OK, that worked - we have taken N of that item.
+                        # By default we give 1 exchange item in return, but
+                        # that can be modified.
+                        ?itemheld ?@thingsibuyextra get !t
+                        ?t isnone if 1 !t then
+                        # give that many exchange items
                         ^thanks.
-                        1 ?@exchange give drop
+                        ?t ?@exchange give drop
                     case
                 # in case the take returned something weird.
                 "Oooh, shivery.". otherwise
