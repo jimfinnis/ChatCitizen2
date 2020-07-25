@@ -136,13 +136,17 @@
     
     []
     ?@thingsibuy keys each loop 
-        i ?@thingsibuy get i getMaterialNameAndNumber,
+        i ?@thingsibuy get !ct
+        ?ct i getMaterialNameAndNumber,
     endloop
     listendwithor.
 
+    # ct will have the cardinality of the last (or only) item
+
     ?@thingsibuy len 1 = if
         [" will get you one ", 
-        "are worth one "]
+         ?ct 1 > if " are " else " is " then
+         "worth one "+]
     else
         [" will each get you one ", 
         "are each worth one "]

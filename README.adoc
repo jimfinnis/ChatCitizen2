@@ -98,7 +98,11 @@ raw. You'll build it using Bukkit's chat component system:
 
 * `json (-- json)` will take a string and make a JSON chat string out of it
 * `+ (json string -- json)` will append a string item to this
-* `jsonbold (json -- json
+* `jsonbold (json bool -- json)` will add bold to the last added item or remove it
+* `jsonitalic (json bool -- json)` will add italic to the last added item or remove it
+* `jsoncol (json colorname -- json)` will set the last added item to a colour (must be a preset in the Bukkit chat colours, e.g. "yellow" or "dark_gray")
+* `jsonclick (json text -- json)` will make the last added item clickable, causing the player to say the text given
+
 
 === Spontaneous speech patterns
 Adding categories with certain special patterns will make the robot

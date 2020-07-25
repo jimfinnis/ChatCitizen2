@@ -1,11 +1,10 @@
 package org.pale.chatcitizen2;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Random;
 
 import net.citizensnpcs.api.persistence.Persist;
 import net.citizensnpcs.api.persistence.PersistenceLoader;
@@ -78,6 +77,12 @@ public class ChatTrait extends Trait {
 	
 	@Persist public int spawnCount=0; //!< number of times spawned
 
+	/**
+	 * Time at which we last saw a player, given their nick. Yes, you
+	 * can disguise yourself by changing nick.
+	 */
+	Map<String, Instant> playerLastSawTime = new HashMap<String, Instant>();
+
 	static class PersistedVars {
 		Map<String,Value> vars;
 		PersistedVars(Map<String,Value> m) {
@@ -107,12 +112,36 @@ public class ChatTrait extends Trait {
 		// Actually, we check to see if they can see *us*.
 		for(Entity e: npc.getEntity().getNearbyEntities(d,1,d)){
 			if(e instanceof Player){
-				Player p = (Player)e;
-				if(p.hasLineOfSight(npc.getEntity()))
-					r.add((Player)e);
+                            Player p = (Player)e;
+                            // now, I'm going to recycle this bit of code so we can store
+                            // when we last saw a player! We only "see" a player when we try
+                            // to talk, which is semantically odd, but it should work.
+                            playerLastSawTime.put(p.getName().toLowerCase(), Instant.now());
+                            if(p.hasLineOfSight(npc.getEntity())) {
+                                r.add(p);
+                                //Plugin.log("ADDING: "+p.getDisplayName());
+                            }
 			}
 		}
 		return r;
+	}
+
+	/**
+	 * Get the last time I "saw" this player 
+	 * @param player
+	 * @return time difference in minutes, or -ve if never - max is 32000.
+	 */
+	public int getTimeSeen(String player){
+            //Plugin.log("LOOKING FOR : "+player);
+            player = player.toLowerCase();
+		if(playerLastSawTime.containsKey(player)) {
+			long diffInSeconds = ChronoUnit.SECONDS.between(playerLastSawTime.get(player),Instant.now());
+			Plugin.log("GOT : "+diffInSeconds);
+			if(diffInSeconds>32000)diffInSeconds=32000;
+			return (int)diffInSeconds;
+		} else {
+			return -1; // i.e. in the future!
+		}
 	}
 	
 	
@@ -307,6 +336,23 @@ public class ChatTrait extends Trait {
 	}
 
 	/**
+	 * say something out-of-band, directly.
+	 * @param toName
+	 * @param pattern
+	 */
+	public void utter(String toName,String msg){
+		List<Player> q = getNearPlayers(audibleDistance);
+		if(q.size()>0){
+			// if a zero length string is returned, nothing happens.
+			if(msg.trim().length()!=0){
+				String s = ChatColor.AQUA+"["+npc.getFullName()+" -> "+toName+"] "+ChatColor.WHITE+msg;
+				for(Player p: q){
+					p.sendMessage(s);
+				}
+			}
+		}
+	}
+	/**
 	 * Generate and send a response to a list of players. p (the player responded to) may be null.
 	 * 
 	 */
@@ -327,7 +373,7 @@ public class ChatTrait extends Trait {
 	/**
 	 * Perform a user function in the bot and say the result. NOTE THAT the func will ALWAYS run whether
 	 * there's anyone to hear it or not.
-	 * @param string funcname
+	 * @param fname funcname
 	 * @param source player who caused the event which triggered this (sets convvars in bot) OR NONE, in which case it's a general message and from the bot.
 	 */
 	private void respondToFunc(String fname, Player source) {
@@ -359,7 +405,7 @@ public class ChatTrait extends Trait {
 	 * Respond to a player saying something nearby. Alternatively used to just say something randomly,
 	 * in which case the player argument is to whom it should be said and the string is a special pattern (like RANDSAY).
 	 * @param player the player who spoke
-	 * @param msg what they said
+	 * @param input what they said
 	 */
 	public void respondTo(Player player,String input) {
 		setPropertiesForSender(player);

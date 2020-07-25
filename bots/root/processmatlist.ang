@@ -1,3 +1,7 @@
+# This processes the "matlist" file into the "matlists.conf" file
+# (well, it actually outputs to stdout but you get the idea).
+    
+
 `io library drop
 `regex library drop
 

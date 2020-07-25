@@ -42,6 +42,9 @@
                     +&thanks ^yourewelcome;
                 } next
             then;
+        +(.* nothing .*) ^nodrinkwanted;
+        +&yes "What kind?" wantsdrink;
+        +&no ^nodrinkwanted;
     } next;
     
 
@@ -84,13 +87,56 @@
     otherwise
 ;
 
+:drinkquestion {
+    +&yes "What kind?" wantsdrink;
+    +&no ^nodrinkwanted;
+    +(.* $c=~drink .*)
+            ?isdrunk if ^refusedrink. else 
+                "One ${$c} coming right up.".
+                addDrink
+                {
+                    +&thanks ^yourewelcome;
+                } next
+            then;
+    +(.* nothing .*) ^nodrinkwanted;
+    } next;
+
+
+:dishonored
+       {
+            +(indeed .*) "Dishonored. Great game. What'll you have?" wantsdrink;
+            +(.* [dishonored dishonored] .*) "Yep, great game. Drink?" drinkquestion;
+       } next
+ ;
+ 
 :RANDSAY |:t|
+    ?@timerjokestep 0 >= if stop then # suppress if timer joke active
+    
     random
-        "Tum te tum"
-    randcase
-        "What a day"
-    randcase
-        weathersay
+    "Tum te tum." randcase
+    "Phew." randcase
+    "<whistles tunelessly>" randcase
+    "<wipes the bar>" randcase
+    "What a day!" randcase
+    "So, looks like we're gathering for whisky and cigars tonight." dishonored
+        randcase
+    "Think you'll get your own squad after what happened last night?" dishonored
+        randcase
+    "Anyone else got an itchy nose?"
+        {
+            +&yes "Sorry!";
+            +&no "Just me then.";
+            +(.* now .*) "Heh. Works every time. Drink?" drinkquestion;
+        } next randcase
+    "I could use a drink myself." randcase
+    "It's been a long week." randcase
+    "We're all in this together. This pub, I mean." randcase
+    "Drinks, anyone?" drinkquestion randcase
+    "Interesting times."
+        {
+            +&yes "Yup. Drink?" drinkquestion;
+            +&no "At least someone's happy. Drink?" drinkquestion;
+        } next
     endrandom
     clean
 ;   
@@ -120,12 +166,12 @@
 ;
  
 
-+/SNARK1([what which] .* got)
++/drinklister1([what which] .* got)
     listdrinks;
-+/SNARK2([what which] .* have)
++/drinklister2([what which] .* have)
     listdrinks;
    
-+/SNARK3([what which] .* ~genericdrink .*)
++/drinklister3([what which] .* ~genericdrink .*)
     listdrinks;
 
 
@@ -151,3 +197,42 @@
     :["the barkeep","your host","the innkeeper","manager of this establishment"]; choose +
     clean
 ;
+
++(.* seen $c=.*)
+    $c lastseen !t
+    cases
+      ?t 0 < if
+         "They've not been in since I got on shift, sorry."
+         case
+      ?t 30 < if
+         "They were just here. Have they gone?"
+         case
+      ?t 300 < if
+         "There were here a few minutes ago."
+         case
+      ?t 1800 < if
+         "They were here less than half an hour ago."
+         case
+      ?t 3600 < if
+         "They were here less than an hour ago."
+         case
+      ?t 10000 < if
+         "They were here a few hours ago."
+         case
+      "They were in a long while ago, but not since. Sorry." otherwise
+      . out clean
+   ;         
+
++&foodpat
+   "Sorry, mate, we don't do food."
+   { 
+      +&foodpat :[
+         "Really, no food.",
+         "Yep, none at all.",
+         "We're not a gastropub.",
+         "Yeah, sorry.","None at all."
+         ]; 
+         choose. holdnext;
+   } next
+   ;
+
