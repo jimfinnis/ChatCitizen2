@@ -1,4 +1,5 @@
-# this is the dialog processing pattern; it happens if you type any single digit.
+# this is the dialog processing pattern;
+# it happens if you type any single digit.
 
 # Prerequisites:
 #   ?dialognode holds the current dialog node symbol (conversation variable)
@@ -7,20 +8,30 @@
 +($n=[ 1 2 3 4 5 6 7 8 9 ])
     $n int !n
     ?n 1 < if "Do please say something sensible." dsay stop then
+
     # first, we need to get the dialog node.
+
     ?dialognode ?dialog get !n
+
     # then we need to get the selected option. 
     # These start at 1, which is good, because so do the items (the
     # first item is the node's string). 
+
     $n int ?n get !opt
+
     # check it's ok
+
     ?opt type "ListValue" != if
         "Eh?" dsay
     else
+
         # it is OK, so get the function to run, and run it. This will typically
         # dsay or dgo, and maybe do some other stuff
+
         ?opt snd call
+
     then
+
     # and stack an empty string for the standard response
     ""
 ;
