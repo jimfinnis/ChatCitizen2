@@ -19,7 +19,7 @@
                 "Such weather","A lovely day"]; choose. endear
             then
         case
-        ?t `afternoon if
+        ?t `afternoon = if
             rain if
                 :["Ohh, the weather this afternoon","Damned rain","It's bleak","The day ends darkly"];
                 choose. endear
