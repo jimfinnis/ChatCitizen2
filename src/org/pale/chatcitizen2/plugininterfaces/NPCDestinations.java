@@ -41,7 +41,7 @@ public class NPCDestinations extends ExternalPluginInterface{
 				trait.lastResult="forced location (ChatCitizen)";
 				trait.setLocation = trait.NPCLocations.get(locnum);
 				trait.currentLocation = trait.setLocation;
-				trait.locationLockUntil = LocalDateTime.now().plusSeconds(forTime);
+				trait.setLocationLockUntil(LocalDateTime.now().plusSeconds(forTime));
 				trait.lastPositionChange = LocalDateTime.now();
 				trait.setRequestedAction(en_RequestedAction.SET_LOCATION);
 				return true;
