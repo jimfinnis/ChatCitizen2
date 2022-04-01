@@ -105,7 +105,7 @@
 :dishonored
        {
             +(indeed .*) "Dishonored. Great game. What'll you have?" wantsdrink;
-            +(.* [dishonored dishonored] .*) "Yep, great game. Drink?" drinkquestion;
+            +(.* [dishonored dishonoured] .*) "Yep, great game. Drink?" drinkquestion;
        } next
  ;
  
@@ -130,6 +130,8 @@
         } next randcase
     "I could use a drink myself." randcase
     "It's been a long week." randcase
+    "Would you like a drink?" randcase
+    "So what's going on?" randcase
     "We're all in this together. This pub, I mean." randcase
     "Drinks, anyone?" drinkquestion randcase
     "Interesting times."

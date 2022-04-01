@@ -25,3 +25,5 @@
 +(.* how .* you .*) howareyou;
 +(how .*) howareyou;
 
++(what .* do .*)
+    "Oh, I'm just the bartender" clean.;
