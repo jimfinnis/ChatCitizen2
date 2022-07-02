@@ -217,7 +217,7 @@
 
 # patterns for setting what to buy.
 
-+/b1 (.* buy $c=~material) $c attemptsetbuy;
++/b1 (.* buy ?some ?[a an] $c=~material .*) $c attemptsetbuy;
 +/b2 (.* buy .+) "That's not a thing I know about.". ;
 +/b3 (.* buy) "Yes, we've established that. But what?". buywhat;
     
@@ -236,6 +236,6 @@
 
 # here we just matched a raw material name.
 
-+$c=~material
++($c=~material .*)
     $c attemptsetbuy;        
 

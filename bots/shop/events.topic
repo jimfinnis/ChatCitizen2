@@ -22,11 +22,13 @@
                 ?t "NOTENOUGH" = if ^notenough. case
                 ?t "OK" = if 
 
-                    # if it worked, print thanks and give the player 1 of the
+                    # if it worked, print thanks and give the player N of the
                     # item they are after.
-
+                    
+                    ?buyingItem ?@thingsisellextra get !t
+                    ?t isnone if 1 !t then
                     ^thanks.
-                    1 ?buyingItem give drop # throw away the results of the give.
+                    ?t ?buyingItem give drop # drop the results of the give command
                 case
                 # print this if some weird code was returned from the take.
                 "Well, that's weird. Did you feel that?".
