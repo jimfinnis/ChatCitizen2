@@ -1,7 +1,7 @@
 name: ChatCitizen
 main: org.pale.chatcitizen2.Plugin
-version: 2.0
-api-version: 1.13
+version: 2.0.5
+api-version: 1.21.4
 depend: [Citizens]
 commands:
   chatcitizen:

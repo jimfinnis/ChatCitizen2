@@ -31,8 +31,6 @@ import org.pale.chatcitizen2.Command.CallInfo;
 import org.pale.chatcitizen2.Command.Cmd;
 import org.pale.chatcitizen2.Command.Registry;
 import org.pale.chatcitizen2.extensions.Core;
-import org.pale.chatcitizen2.extensions.NPCDest;
-import org.pale.chatcitizen2.plugininterfaces.NPCDestinations;
 import org.pale.chatcitizen2.plugininterfaces.Sentinel;
 import org.pale.simplechat.*;
 import org.pale.simplechat.actions.ActionException;
@@ -62,7 +60,6 @@ public class Plugin extends JavaPlugin {
 	 */
 	private Map<String,Bot> bots = new HashMap<String,Bot>();
 
-	public NPCDestinations ndPlugin;
 	public Sentinel sentinelPlugin;
 
 	private Registry commandRegistry=new Registry();
@@ -72,15 +69,11 @@ public class Plugin extends JavaPlugin {
 	 * ones all over the place!
 	 */
 	public static Plugin getInstance() {
-		if (instance == null)
-			throw new RuntimeException(
-					"Attempt to get plugin when it's not enabled");
 		return instance;
 	}
 
 	@Override
 	public void onDisable() {
-		instance = null;
 		getLogger().info("ChatCitizen has been disabled");
 	}
 
@@ -89,7 +82,6 @@ public class Plugin extends JavaPlugin {
 		if(instance!=null)
 			throw new RuntimeException("oi! only one instance!");
 		InstructionCompiler.register(Core.class);
-		InstructionCompiler.register(NPCDest.class);
 		InstructionCompiler.register(org.pale.chatcitizen2.extensions.Sentinel.class);
 		InstructionCompiler.addExtension("ChatCitizen");
 	}
@@ -111,9 +103,6 @@ public class Plugin extends JavaPlugin {
 				Plugin.log("-- "+s);
 			}
 		});
-
-		// check other optional plugins
-		ndPlugin = new NPCDestinations();
 
 		sentinelPlugin = new Sentinel();
 

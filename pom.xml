@@ -29,15 +29,15 @@
   <groupId>org.pale</groupId>
   <artifactId>chatcitizen</artifactId>
   <packaging>jar</packaging>
-  <version>2.0.4</version>
+  <version>2.0.5</version>
   <properties>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
     
     <!-- change these bits. -->
-    <server.dir>/home/white/mc/server</server.dir>
-    <server.plugindir>${server.dir}/plugins</server.plugindir>
-    <simplechat.bindir>/home/white/git/SimpleChat/target/classes</simplechat.bindir>  
+    <server.dir>/home/white/ChatCitizen2</server.dir>
+    <server.plugindir>${server.dir}</server.plugindir>
+    <simplechat.bindir>/home/white/SimpleChat/target/classes</simplechat.bindir>  
   </properties>
   
   
@@ -53,30 +53,23 @@
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.18.2-R0.1-SNAPSHOT</version>
+      <version>1.21.4-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <!--plugins we need to link against, in the server's plugins dir -->
     <dependency>
-      <groupId>net.livecar.nuttyworks.npc_destinations</groupId>
-      <artifactId>NPC_Destinations</artifactId>
-      <version>2_6_10</version>
-      <scope>system</scope>
-      <systemPath>${server.plugindir}/NPC_Destinations-2_6_10.jar</systemPath>
-    </dependency>
-    <dependency>
       <groupId>net.citizensnpcs</groupId>
       <artifactId>api</artifactId>
-      <version>2.0.29</version>
+      <version>2.0.38</version>
       <scope>system</scope>
-      <systemPath>${server.plugindir}/Citizens-2.0.29-b2511.jar</systemPath>
+      <systemPath>${server.plugindir}/Citizens-2.0.38-b3801.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>org.mcmonkey</groupId>
       <artifactId>sentinel</artifactId>
-      <version>2.5.0-SNAPSHOT-b461</version>
+      <version>2.9.2</version>
       <scope>system</scope>
-      <systemPath>${server.plugindir}/Sentinel-2.5.0-SNAPSHOT-b461.jar</systemPath>
+      <systemPath>${server.plugindir}/Sentinel-2.9.2-SNAPSHOT-b527.jar</systemPath>
     </dependency>
     <!-- These are now pulled as individual classes, so that the end user
         doesn't have to download it as an extra jar.

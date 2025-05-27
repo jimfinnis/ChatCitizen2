@@ -19,7 +19,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.pale.chatcitizen2.plugininterfaces.NPCDestinations;
 import org.pale.simplechat.Bot;
 import org.pale.simplechat.BotConfigException;
 import org.pale.simplechat.BotInstance;
@@ -37,11 +36,6 @@ import org.pale.simplechat.values.StringValue;
 public class ChatTrait extends Trait {
 
 	private static final long sayCheckInterval = 5000; //!< how often (in ms) we check random say.
-
-	/**
-	 * This will point to some data if we have NPCDestinations.
-	 */
-	public NPCDestinations.NPCDestData nddat;
 
 	public ChatTrait() {
 		super("chatcitizen");
@@ -265,8 +259,6 @@ public class ChatTrait extends Trait {
 	@Override
 	public void onAttach() {
 		plugin.getServer().getLogger().info(npc.getName() + " has been assigned ChatCitizen!");
-		// set up the NPCDestinations data (if present)
-		nddat = plugin.ndPlugin.makeData(npc);
 	}
 
 	/**
