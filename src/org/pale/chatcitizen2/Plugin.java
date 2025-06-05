@@ -124,7 +124,7 @@ public class Plugin extends JavaPlugin {
 	}
 
 	public void loadBots(){
-		Logger.setLog(Logger.ALL);
+//		Logger.setLog(Logger.ALL);
 		FileConfiguration c = this.getConfig();
 		final ConfigurationSection bots = c.getConfigurationSection("bots");
 		if(bots==null){

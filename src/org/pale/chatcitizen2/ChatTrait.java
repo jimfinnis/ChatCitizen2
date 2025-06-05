@@ -276,20 +276,14 @@ public class ChatTrait extends Trait {
 			// if this is a new bot it won't have any persisted vars. Use those in the bot instance,
 			// set up by init. Otherwise, use those in the persistence data.
 			if(reset || persistedVars == null || persistedVars.vars.size()==0) {
-				Plugin.log("Setting persisted vars to wrap existing instance vars");
 				persistedVars = new PersistedVars(instance.getVars());
 			} else {
-				Plugin.log("Setting instance vars to contents of persisted vars");
 				instance.setVars(persistedVars.vars);
 			}
 			if(reset)spawnCount=0;
 			if(spawnCount==0)
 				instance.runInits();
 			spawnCount++;
-			Plugin.log("There are "+persistedVars.vars.size()+" persisted vars.");
-			for(String s: persistedVars.vars.keySet()){
-				Plugin.log("    "+s);
-			}
 		} catch (BotConfigException e) {
 			e.printStackTrace();
 			Plugin.log("cannot configure bot "+b.getName());
@@ -299,7 +293,7 @@ public class ChatTrait extends Trait {
 	// Run code when the NPC is despawned. This is called before the entity actually despawns so npc.getBukkitEntity() is still valid.
 	@Override
 	public void onDespawn() {
-		Plugin.log(" Despawn run on "+npc.getFullName());
+//		Plugin.log(" Despawn run on "+npc.getFullName());
 		instance.remove();
 		instance=null;
 		plugin.removeChatter(npc);
@@ -319,7 +313,7 @@ public class ChatTrait extends Trait {
 		setBot(b,botName,false);
 
 		plugin.addChatter(npc);
-		Plugin.log(" Spawn run on "+npc.getFullName());
+//		Plugin.log(" Spawn run on "+npc.getFullName());
 	}
 
 	//run code when the NPC is removed. Use this to tear down any repeating tasks.
